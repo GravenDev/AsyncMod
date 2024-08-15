@@ -30,7 +30,7 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
 
-    implementation("com.discord4j:discord4j-core:3.2.6")
+     implementation("net.dv8tion:JDA:5.0.2")
 }
 
 tasks.withType<Test> {
