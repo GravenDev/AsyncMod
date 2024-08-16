@@ -12,8 +12,13 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
+import net.dv8tion.jda.api.utils.FileUpload;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
+import java.io.ByteArrayOutputStream;
 
 @Command
 @RequiredArgsConstructor
@@ -27,12 +32,20 @@ public class CommandLevel implements CommandExecutor {
                 .addOption(OptionType.USER, "user", "Membre dont vous voulez savoir le niveau", false);
     }
 
+    @SneakyThrows
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         assert event.getMember() != null;
 
         GravenMember member = memberService.getMemberByDiscordMember(event.getMember());
 
-        event.reply(STR."You are level \{member.level()} and experience \{member.experience()}/\{LevelUtils.xpForNextLevelAt(member.level())}").queue();
+        BufferedImage image = ImageGenerator.generateLevelImage(event.getMember(), member);
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        ImageIO.write(image, "png", stream);
+        stream.flush();
+
+        event.reply(STR."You are level \{member.level()} and experience \{LevelUtils.formatExperience(member.experience(), member.level())}")
+                .addFiles(FileUpload.fromData(stream.toByteArray(), "image.png"))
+                .queue();
     }
 }
