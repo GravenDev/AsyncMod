@@ -8,7 +8,9 @@ import fr.redstom.gravenlevelling.utils.ImageGenerator;
 import fr.redstom.gravenlevelling.utils.LevelUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
@@ -35,11 +37,11 @@ public class CommandLevel implements CommandExecutor {
     @SneakyThrows
     @Override
     public void execute(SlashCommandInteractionEvent event) {
-        assert event.getMember() != null;
+        Member discordMember = event.getOption("user", event.getMember(), OptionMapping::getAsMember);
 
-        GravenMember member = memberService.getMemberByDiscordMember(event.getMember());
+        GravenMember member = memberService.getMemberByDiscordMember(discordMember);
 
-        BufferedImage image = ImageGenerator.generateLevelImage(event.getMember(), member);
+        BufferedImage image = ImageGenerator.generateLevelImage(discordMember, member);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", stream);
         stream.flush();
