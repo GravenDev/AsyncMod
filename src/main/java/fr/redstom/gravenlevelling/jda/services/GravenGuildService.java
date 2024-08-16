@@ -15,12 +15,9 @@ public class GravenGuildService {
     public GravenGuild getOrCreateByDiscordGuild(Guild guild) {
         return guildRepository
                 .findById(guild.getIdLong())
-                .orElseGet(() -> {
-                    System.out.println("Creating new guild");
-                    return guildRepository.save(
-                            GravenGuild.builder()
-                                    .id(guild.getIdLong())
-                                    .build());
-                });
+                .orElseGet(() -> guildRepository.save(
+                        GravenGuild.builder()
+                                .id(guild.getIdLong())
+                                .build()));
     }
 }

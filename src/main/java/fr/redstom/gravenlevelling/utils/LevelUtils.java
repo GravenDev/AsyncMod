@@ -1,33 +1,46 @@
 package fr.redstom.gravenlevelling.utils;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+@Service
 public class LevelUtils {
 
-    public static final int MIN_PER_MESSAGE = 200;
-    public static final int MAX_PER_MESSAGE = 200;
+    @Value("${xp.min_per_message}")
+    private int minPerMessage = 2;
 
-    public static long xpForNextLevelAt(long level) {
+    @Value("${xp.max_per_message}")
+    private int maxPerMessage = 5;
+
+    @Value("${xp.min_message_length}")
+    private int minMessageLength = 10;
+
+    @Value("${xp.max_message_length}")
+    private int maxMessageLength = 100;
+
+    public long xpForNextLevelAt(long level) {
         return Math.round(5 * Math.pow(level, 2) + (50 * level) + 100);
     }
 
-    public static long flattenMessageLengthIntoGain(double messageLength) {
-        if(messageLength < 10) {
-            return MIN_PER_MESSAGE;
+    public long flattenMessageLengthIntoGain(double messageLength) {
+        if(messageLength < minMessageLength) {
+            return minPerMessage;
         }
-        if (messageLength > 100) {
-            return MAX_PER_MESSAGE;
+        if (messageLength > maxMessageLength) {
+            return maxPerMessage;
         }
 
-        return Math.round(MIN_PER_MESSAGE + ((messageLength - 10) * (MAX_PER_MESSAGE - MIN_PER_MESSAGE) / 90));
+        return Math.round(minPerMessage + ((messageLength - minMessageLength) * (maxPerMessage - minPerMessage) / (maxMessageLength - minMessageLength)));
     }
 
-    public static String formatExperience(long xp, long level) {
+    public String formatExperience(long xp, long level) {
         long totalXp = xpForNextLevelAt(level);
 
-        return formatNumber(xp) + "/" + formatNumber(totalXp);
+        return STR."\{formatNumber(xp)}/\{formatNumber(totalXp)}";
     }
 
 
-    private static String formatNumber(long number) {
+    private String formatNumber(long number) {
         if (number >= 1_000_000_000) {
             return String.format("%.1fB", number / 1_000_000_000.0);
         } else if (number >= 1_000_000) {

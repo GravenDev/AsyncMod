@@ -15,13 +15,10 @@ public class GravenUserService {
     public GravenUser getOrCreateByDiscordUser(User user) {
         return userRepository
                 .findById(user.getIdLong())
-                .orElseGet(() -> {
-                    System.out.println("Creating new user");
-                    return userRepository.save(
-                            GravenUser.builder()
-                                    .id(user.getIdLong())
-                                    .build());
-                });
+                .orElseGet(() -> userRepository.save(
+                        GravenUser.builder()
+                                .id(user.getIdLong())
+                                .build()));
     }
 
 }

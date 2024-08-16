@@ -27,6 +27,7 @@ import java.io.ByteArrayOutputStream;
 public class CommandLevel implements CommandExecutor {
 
     private final GravenMemberService memberService;
+    private final ImageGenerator imageGenerator;
 
     @Override
     public SlashCommandData data() {
@@ -41,13 +42,11 @@ public class CommandLevel implements CommandExecutor {
 
         GravenMember member = memberService.getMemberByDiscordMember(discordMember);
 
-        BufferedImage image = ImageGenerator.generateLevelImage(discordMember, member);
+        BufferedImage image = imageGenerator.generateLevelImage(discordMember, member);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", stream);
         stream.flush();
 
-        event.reply(STR."You are level \{member.level()} and experience \{LevelUtils.formatExperience(member.experience(), member.level())}")
-                .addFiles(FileUpload.fromData(stream.toByteArray(), "image.png"))
-                .queue();
+        event.replyFiles(FileUpload.fromData(stream.toByteArray(), "image.png")).queue();
     }
 }

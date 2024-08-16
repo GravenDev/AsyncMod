@@ -18,6 +18,8 @@ import java.time.temporal.ChronoUnit;
 @RequiredArgsConstructor
 public class GravenMemberService {
 
+    private final LevelUtils levelUtils;
+
     private final GravenMemberRepository memberRepository;
     private final GravenGuildService guildService;
     private final GravenUserService userService;
@@ -29,13 +31,10 @@ public class GravenMemberService {
 
         return memberRepository
                 .findByUserAndGuild(user, guild)
-                .orElseGet(() -> {
-                    System.out.println();
-                    return memberRepository.save(GravenMember.builder()
-                            .user(user)
-                            .guild(guild)
-                            .build());
-                });
+                .orElseGet(() -> memberRepository.save(GravenMember.builder()
+                        .user(user)
+                        .guild(guild)
+                        .build()));
     }
 
     @Transactional
@@ -44,9 +43,9 @@ public class GravenMemberService {
         Instant messageCreated = message.getTimeCreated().toInstant();
 
         long distance = ChronoUnit.MINUTES.between(messageCreated, gMember.lastMessageAt());
-        if(Math.abs(distance) < 1) return false;
+        if (Math.abs(distance) < 1) return false;
 
-        long xpToGain = LevelUtils.flattenMessageLengthIntoGain(message.getContentRaw().length());
+        long xpToGain = levelUtils.flattenMessageLengthIntoGain(message.getContentRaw().length());
 
         gMember.experience(gMember.experience() + xpToGain);
         gMember.lastMessageAt(messageCreated);
@@ -63,9 +62,9 @@ public class GravenMemberService {
         GravenMember gMember = getMemberByDiscordMember(member);
 
         long xp = gMember.experience();
-        long xpToNextLevel = LevelUtils.xpForNextLevelAt(gMember.level());
+        long xpToNextLevel = levelUtils.xpForNextLevelAt(gMember.level());
 
-        if(xp < xpToNextLevel) {
+        if (xp < xpToNextLevel) {
             return false;
         }
 
@@ -75,5 +74,11 @@ public class GravenMemberService {
         memberRepository.save(gMember);
 
         return true;
+    }
+
+    @Transactional
+    public int getRank(Member member) {
+        GravenMember gMember = getMemberByDiscordMember(member);
+        return memberRepository.findPositionOfMember(gMember.user(), gMember.guild());
     }
 }
