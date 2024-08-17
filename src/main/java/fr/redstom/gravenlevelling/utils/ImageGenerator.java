@@ -9,13 +9,17 @@ import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Locale;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -89,6 +93,28 @@ public class ImageGenerator {
         BufferedImage avatarAsImage = ImageIO.read(avatar);
         g2d.drawImage(avatarAsImage, 10, 10, 330, 330, null);
 
+        g2d.setClip(new Ellipse2D.Double(1490, 10, 100, 100));
+
+        g2d.setColor(SECONDARY_BG);
+        g2d.fillRect(1490, 10, 100, 100);
+
+        if (member.getGuild().getIcon() != null) {
+            InputStream serverLogo = member.getGuild().getIcon().download(512).join();
+            BufferedImage serverLogoAsImage = ImageIO.read(serverLogo);
+
+            g2d.drawImage(serverLogoAsImage, 1490, 10, 100, 100, null);
+        } else {
+            g2d.setFont(OUTFIT.deriveFont(24f));
+            FontMetrics abbreviationMetrics = g2d.getFontMetrics();
+            String serverAbbreviation = Arrays.stream(member.getGuild().getName().split(" ")).reduce("", (a, b) -> a + b.charAt(0));
+            int serverAbbreviationWidth = abbreviationMetrics.stringWidth(serverAbbreviation);
+
+            g2d.setColor(TEXT);
+            g2d.setBackground(TEXT);
+            g2d.drawString(serverAbbreviation, 1540 - serverAbbreviationWidth / 2, 60 - abbreviationMetrics.getHeight() / 2 + abbreviationMetrics.getAscent());
+        }
+        g2d.setClip(null);
+
         g2d.setColor(SECONDARY_BG);
         g2d.setBackground(SECONDARY_BG);
         g2d.fillRect(0, 350, 1600, 50);
@@ -150,7 +176,13 @@ public class ImageGenerator {
         g2d.drawString(experienceTitle, experienceTextX, 177 + 36);
 
         int rank = memberService.getRank(member);
-        g2d.drawImage(switch(rank) {
+        String rankText = RANK_FORMATTER.format(rank);
+        if (gMember.experience() == 0 && gMember.level() == 0) {
+            rank = -1;
+            rankText = "-";
+        }
+
+        g2d.drawImage(switch (rank) {
             case 1 -> PODIUM_GOLD;
             case 2 -> PODIUM_SILVER;
             case 3 -> PODIUM_BRONZE;
@@ -159,7 +191,7 @@ public class ImageGenerator {
 
         int podiumTextX = startingWidth + levelWidth + experienceWidth + imageSize * 3 + margin * 7;
         g2d.setFont(contentFont);
-        g2d.drawString(RANK_FORMATTER.format(rank), podiumTextX, 213 + 60);
+        g2d.drawString(rankText, podiumTextX, 213 + 60);
 
         g2d.setFont(titleFont);
         g2d.drawString("Rang :", podiumTextX, 177 + 36);
@@ -167,4 +199,87 @@ public class ImageGenerator {
         return image;
     }
 
+
+    @SneakyThrows
+    public BufferedImage generateLeaderboardImage(int page, List<GravenMember> members, Function<GravenMember, Member> memberMapper) {
+        List<Member> dMembers = members.stream().map(memberMapper).toList();
+
+        int imageHeight = 185 + members.size() * 125 + (members.size() - 1) * 10;
+
+        BufferedImage image = new BufferedImage(1175, imageHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = image.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+
+        g2d.setColor(SECONDARY_BG);
+        g2d.fillRect(0, 0, 1175, 1525);
+
+        g2d.setColor(PRIMARY_BG);
+        g2d.fillRect(150, 25, 1000, 125);
+
+        g2d.setFont(OUTFIT.deriveFont(40f));
+        g2d.setColor(TEXT);
+        g2d.setBackground(TEXT);
+
+        drawCenteredText(g2d, "Rang", 222.5f, 87.5f);
+        drawVCenteredText(g2d, "Nom d'utilisateur", 332.5f, 87.5f);
+        drawCenteredText(g2d, "Niv.", 1088, 87.5f);
+
+        g2d.setFont(OUTFIT.deriveFont(48f));
+        for (int i = 0; i < members.size(); i++) {
+            Member discordMember = dMembers.get(i);
+            GravenMember gravenMember = members.get(i);
+
+            Image avatar = ImageIO.read(discordMember.getEffectiveAvatar().download().join());
+
+            drawMemberPosition(g2d, 25 + (i + 1) * 135, discordMember.getColor(), avatar, (page - 1) * 10 + i + 1, gravenMember.level(), discordMember.getUser().getName());
+        }
+
+        g2d.setColor(SECONDARY_BG);
+        for (Integer x : List.of(150, 285, 1015)) {
+            g2d.fillRect(x, 0, 10, 1675);
+        }
+
+        return image;
+    }
+
+    private void drawMemberPosition(Graphics2D g2d, int y, Color color, Image avatar, int rank, long level, String name) {
+        g2d.setColor(PRIMARY_BG);
+        g2d.fillRect(25, y, 1125, 125);
+
+        g2d.setColor(color);
+        g2d.fillRect(25, y, 125, 125);
+
+        g2d.drawImage(avatar, 30, y + 5, 115, 115, null);
+
+        g2d.setColor(TEXT);
+        switch (rank) {
+            case 1, 2, 3 -> g2d.drawImage(switch (rank) {
+                case 1 -> PODIUM_GOLD;
+                case 2 -> PODIUM_SILVER;
+                case 3 -> PODIUM_BRONZE;
+                default -> throw new IllegalStateException("Unexpected value: " + rank);
+            }, 185, y + 25, 75, 75, null);
+            default -> drawCenteredText(g2d, STR."#\{NumberUtils.formatNumber(rank)}", 222.5f, y + 62.5f);
+        }
+        drawVCenteredText(g2d, STR."@\{name}", 332.5f, y + 62.5f);
+
+        drawCenteredText(g2d, NumberUtils.formatNumber(level), 1088, y + 62.5f);
+    }
+
+    private void drawCenteredText(Graphics2D g2d, String text, float x, float y) {
+        FontMetrics metrics = g2d.getFontMetrics();
+        g2d.drawString(text, x - metrics.stringWidth(text) / 2f, y - metrics.getHeight() / 2f + metrics.getAscent());
+    }
+
+    private void drawVCenteredText(Graphics2D g2d, String text, float x, float y) {
+        FontMetrics metrics = g2d.getFontMetrics();
+        g2d.drawString(text, x, y - metrics.getHeight() / 2f + metrics.getAscent());
+    }
 }

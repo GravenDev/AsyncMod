@@ -36,19 +36,8 @@ public class LevelUtils {
     public String formatExperience(long xp, long level) {
         long totalXp = xpForNextLevelAt(level);
 
-        return STR."\{formatNumber(xp)}/\{formatNumber(totalXp)}";
+        return STR."\{NumberUtils.formatNumber(xp)}/\{NumberUtils.formatNumber(totalXp)}";
     }
 
 
-    private String formatNumber(long number) {
-        if (number >= 1_000_000_000) {
-            return String.format("%.1fB", number / 1_000_000_000.0);
-        } else if (number >= 1_000_000) {
-            return String.format("%.1fM", number / 1_000_000.0);
-        } else if (number >= 500) {
-            return String.format("%.1fk", number / 1_000.0);
-        } else {
-            return String.valueOf(number);
-        }
-    }
 }

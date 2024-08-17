@@ -1,5 +1,6 @@
 package fr.redstom.gravenlevelling.utils;
 
+import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 
@@ -9,4 +10,5 @@ public interface CommandExecutor {
 
     void execute(SlashCommandInteractionEvent event);
 
+    default void autocomplete(CommandAutoCompleteInteractionEvent event) {}
 }

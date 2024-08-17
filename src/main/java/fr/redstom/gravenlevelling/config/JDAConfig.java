@@ -6,6 +6,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +23,12 @@ public class JDAConfig {
     JDA client(@Value("${bot.token}") String token,
                List<ListenerAdapter> eventListeners,
                List<CommandExecutor> commandExecutors) throws InterruptedException {
-        JDA client = JDABuilder.create(token, EnumSet.of(GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT)).build();
+        JDA client = JDABuilder.create(
+                        token,
+                        GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS
+                )
+                .setMemberCachePolicy(MemberCachePolicy.ALL)
+                .build();
 
         log.info("Event listeners found: {}", String.join(", ", eventListeners.stream().map(Object::getClass).map(Class::getName).toList()));
         log.info("Commands found: {}", String.join(", ", commandExecutors.stream().map(Object::getClass).map(Class::getName).toList()));

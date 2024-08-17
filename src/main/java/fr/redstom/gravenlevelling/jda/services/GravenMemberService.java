@@ -7,8 +7,12 @@ import fr.redstom.gravenlevelling.jda.repositories.GravenMemberRepository;
 import fr.redstom.gravenlevelling.utils.LevelUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -23,6 +27,10 @@ public class GravenMemberService {
     private final GravenMemberRepository memberRepository;
     private final GravenGuildService guildService;
     private final GravenUserService userService;
+
+    @Autowired
+    @Lazy
+    private JDA jda;
 
     @Transactional
     public GravenMember getMemberByDiscordMember(Member member) {
@@ -80,5 +88,19 @@ public class GravenMemberService {
     public int getRank(Member member) {
         GravenMember gMember = getMemberByDiscordMember(member);
         return memberRepository.findPositionOfMember(gMember.user(), gMember.guild());
+    }
+
+    public Member getDiscordMemberByMember(GravenMember gravenMember) {
+        Guild guild = jda.getGuildById(gravenMember.guild().id());
+        Member member = guild.getMemberById(gravenMember.user().id());
+
+        if(member == null) {
+            System.out.println("Not found, fetching " + gravenMember.user().id());
+            member = guild.retrieveMemberById(gravenMember.user().id())
+                    .useCache(true)
+                    .complete();
+        }
+
+        return member;
     }
 }

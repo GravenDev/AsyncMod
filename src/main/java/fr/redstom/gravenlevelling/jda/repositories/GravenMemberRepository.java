@@ -3,6 +3,8 @@ package fr.redstom.gravenlevelling.jda.repositories;
 import fr.redstom.gravenlevelling.jda.entities.GravenGuild;
 import fr.redstom.gravenlevelling.jda.entities.GravenMember;
 import fr.redstom.gravenlevelling.jda.entities.GravenUser;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -36,4 +38,16 @@ public interface GravenMemberRepository extends CrudRepository<GravenMember, Gra
                 WHERE memberRank.user = :user
             """)
     int findPositionOfMember(@Param("user") GravenUser user, @Param("guild") GravenGuild guild);
+
+    @Query("""
+            SELECT g
+            FROM GravenMember g
+            WHERE
+                g.guild = ?1
+                AND NOT (g.level = 0 AND g.experience = 0)
+            ORDER BY
+                g.level DESC,
+                g.experience DESC
+            """)
+    Page<GravenMember> findAllByGuild(GravenGuild guild, Pageable config);
 }
