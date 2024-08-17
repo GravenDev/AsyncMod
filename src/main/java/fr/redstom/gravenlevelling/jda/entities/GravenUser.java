@@ -17,6 +17,6 @@ import lombok.*;
 public class GravenUser {
 
     @Id
-    private Long id;
+    private long id;
 
 }

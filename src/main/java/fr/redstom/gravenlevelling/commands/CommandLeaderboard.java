@@ -52,7 +52,7 @@ public class CommandLeaderboard implements CommandExecutor {
         int page = Math.abs(event.getOption("page", 1, OptionMapping::getAsInt));
         InteractionHook hook = event.deferReply(false).complete();
 
-        byte[] data = guildService.getLeaderboardImageFor(event.getGuild(), page);
+        byte[] data = guildService.getLeaderboardImageFor(event.getGuild(), page, event.getMember());
 
         if (data == null) {
             hook.editOriginal(STR.":x: Il n'existe pas pas de page n°**\{page}** !").queue();

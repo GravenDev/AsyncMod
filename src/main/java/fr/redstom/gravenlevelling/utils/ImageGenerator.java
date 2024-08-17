@@ -2,8 +2,10 @@ package fr.redstom.gravenlevelling.utils;
 
 import fr.redstom.gravenlevelling.jda.entities.GravenMember;
 import fr.redstom.gravenlevelling.jda.services.GravenMemberService;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,10 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Function;
+
+import static fr.redstom.gravenlevelling.utils.GravenColors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,14 +33,6 @@ public class ImageGenerator {
     public static final DecimalFormat RANK_FORMATTER = (DecimalFormat) NumberFormat.getInstance(Locale.US);
 
     public static final Font OUTFIT;
-
-    public static final Color PRIMARY_BG = new Color(0x242220);
-    public static final Color SECONDARY_BG = new Color(0x3f3c38);
-
-    public static final Color TEXT = new Color(0xeeeeee);
-    public static final Color TEXT_ACCENT = new Color(0x898887);
-
-    public static final Color ACCENT = new Color(0xff9142);
 
     public static final Image PODIUM;
     public static final Image PODIUM_BRONZE;
@@ -68,7 +65,7 @@ public class ImageGenerator {
 
     @SneakyThrows
     public BufferedImage generateLevelImage(Member member, GravenMember gMember) {
-        Color accent = member.getColor() == null ? ACCENT : member.getColor();
+        Color accent = member.getColor() == null ? ORANGE : member.getColor();
 
         InputStream avatar = member.getEffectiveAvatar().download(512).join();
 
@@ -93,27 +90,7 @@ public class ImageGenerator {
         BufferedImage avatarAsImage = ImageIO.read(avatar);
         g2d.drawImage(avatarAsImage, 10, 10, 330, 330, null);
 
-        g2d.setClip(new Ellipse2D.Double(1490, 10, 100, 100));
-
-        g2d.setColor(SECONDARY_BG);
-        g2d.fillRect(1490, 10, 100, 100);
-
-        if (member.getGuild().getIcon() != null) {
-            InputStream serverLogo = member.getGuild().getIcon().download(512).join();
-            BufferedImage serverLogoAsImage = ImageIO.read(serverLogo);
-
-            g2d.drawImage(serverLogoAsImage, 1490, 10, 100, 100, null);
-        } else {
-            g2d.setFont(OUTFIT.deriveFont(24f));
-            FontMetrics abbreviationMetrics = g2d.getFontMetrics();
-            String serverAbbreviation = Arrays.stream(member.getGuild().getName().split(" ")).reduce("", (a, b) -> a + b.charAt(0));
-            int serverAbbreviationWidth = abbreviationMetrics.stringWidth(serverAbbreviation);
-
-            g2d.setColor(TEXT);
-            g2d.setBackground(TEXT);
-            g2d.drawString(serverAbbreviation, 1540 - serverAbbreviationWidth / 2, 60 - abbreviationMetrics.getHeight() / 2 + abbreviationMetrics.getAscent());
-        }
-        g2d.setClip(null);
+        drawServerIcon(g2d, member.getGuild(), 1490, 10, SECONDARY_BG);
 
         g2d.setColor(SECONDARY_BG);
         g2d.setBackground(SECONDARY_BG);
@@ -199,12 +176,18 @@ public class ImageGenerator {
         return image;
     }
 
-
     @SneakyThrows
-    public BufferedImage generateLeaderboardImage(int page, List<GravenMember> members, Function<GravenMember, Member> memberMapper) {
+    public BufferedImage generateLeaderboardImage(int page, @Nullable GravenMember user, List<GravenMember> members, Function<GravenMember, Member> memberMapper) {
         List<Member> dMembers = members.stream().map(memberMapper).toList();
 
-        int imageHeight = 185 + members.size() * 125 + (members.size() - 1) * 10;
+        GravenMember originalUser = user;
+        if (user != null) {
+            if(members.stream().anyMatch(u -> user.user().id() == u.user().id())) {
+                originalUser = null;
+            }
+        }
+
+        int imageHeight = 185 + members.size() * 125 + (members.size() - 1) * 10 + (originalUser != null ? 175 : 0);
 
         BufferedImage image = new BufferedImage(1175, imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
@@ -218,7 +201,9 @@ public class ImageGenerator {
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
         g2d.setColor(SECONDARY_BG);
-        g2d.fillRect(0, 0, 1175, 1525);
+        g2d.fillRect(0, 0, 1175, imageHeight);
+
+        drawServerIcon(g2d, dMembers.get(0).getGuild(), 25 + 25/2, 25 + 25/2, PRIMARY_BG);
 
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(150, 25, 1000, 125);
@@ -241,19 +226,67 @@ public class ImageGenerator {
             drawMemberPosition(g2d, 25 + (i + 1) * 135, discordMember.getColor(), avatar, (page - 1) * 10 + i + 1, gravenMember.level(), discordMember.getUser().getName());
         }
 
+        if (originalUser != null) {
+            Member discordMember = memberMapper.apply(originalUser);
+
+            Image avatar = ImageIO.read(discordMember.getEffectiveAvatar().download().join());
+
+            drawMemberPosition(
+                    g2d,
+                    imageHeight - 150,
+                    discordMember.getColor(),
+                    avatar,
+                    memberService.getRank(discordMember),
+                    originalUser.level(),
+                    discordMember.getUser().getName()
+            );
+        }
+
         g2d.setColor(SECONDARY_BG);
         for (Integer x : List.of(150, 285, 1015)) {
-            g2d.fillRect(x, 0, 10, 1675);
+            g2d.fillRect(x, 0, 10, imageHeight);
         }
+
+        if(originalUser != null) {
+            g2d.setColor(PRIMARY_BG);
+            g2d.setBackground(PRIMARY_BG);
+            g2d.fillRect(25, imageHeight - 180, 1125, 10);
+        }
+
 
         return image;
     }
+
+    private static void drawServerIcon(Graphics2D g2d, Guild guild, int x, int y, Color defaultBg) throws IOException {
+        g2d.setClip(new Ellipse2D.Double(x, y, 100, 100));
+
+        g2d.setColor(defaultBg);
+        g2d.fillRect(x, y, 100, 100);
+
+        if (guild.getIcon() != null) {
+            InputStream serverLogo = guild.getIcon().download(512).join();
+            BufferedImage serverLogoAsImage = ImageIO.read(serverLogo);
+
+            g2d.drawImage(serverLogoAsImage, x, y, 100, 100, null);
+        } else {
+            g2d.setFont(OUTFIT.deriveFont(24f));
+            FontMetrics abbreviationMetrics = g2d.getFontMetrics();
+            String serverAbbreviation = Arrays.stream(guild.getName().split(" ")).reduce("", (a, b) -> a + b.charAt(0));
+            int serverAbbreviationWidth = abbreviationMetrics.stringWidth(serverAbbreviation);
+
+            g2d.setColor(TEXT);
+            g2d.setBackground(TEXT);
+            g2d.drawString(serverAbbreviation, x + 50 - serverAbbreviationWidth / 2, y + 50 - abbreviationMetrics.getHeight() / 2 + abbreviationMetrics.getAscent());
+        }
+        g2d.setClip(null);
+    }
+
 
     private void drawMemberPosition(Graphics2D g2d, int y, Color color, Image avatar, int rank, long level, String name) {
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(25, y, 1125, 125);
 
-        g2d.setColor(color);
+        g2d.setColor(color == null ? ORANGE : color);
         g2d.fillRect(25, y, 125, 125);
 
         g2d.drawImage(avatar, 30, y + 5, 115, 115, null);

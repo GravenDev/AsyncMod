@@ -5,10 +5,12 @@ import fr.redstom.gravenlevelling.jda.entities.GravenMember;
 import fr.redstom.gravenlevelling.jda.repositories.GravenGuildRepository;
 import fr.redstom.gravenlevelling.jda.repositories.GravenMemberRepository;
 import fr.redstom.gravenlevelling.utils.ImageGenerator;
+import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -47,13 +49,14 @@ public class GravenGuildService {
 
     @Transactional
     @SneakyThrows
-    public byte[] getLeaderboardImageFor(Guild guild, int page) {
+    public byte[] getLeaderboardImageFor(Guild guild, int page, @Nullable Member member) {
         Page<GravenMember> members = getLeaderboardOf(guild, page);
         if (members.isEmpty()) {
             return null;
         }
 
-        BufferedImage image = imageGenerator.generateLeaderboardImage(page, members.getContent(), memberService::getDiscordMemberByMember);
+        GravenMember gMember = member == null ? null : memberService.getMemberByDiscordMember(member);
+        BufferedImage image = imageGenerator.generateLeaderboardImage(page, gMember, members.getContent(), memberService::getDiscordMemberByMember);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", stream);

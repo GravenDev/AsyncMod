@@ -27,7 +27,7 @@ public class LeaderboardNextButton implements ButtonExecutor {
         int page = Integer.parseInt(args[0]) + 1;
         InteractionHook hook = event.deferReply(true).complete();
 
-        byte[] data = guildService.getLeaderboardImageFor(event.getGuild(), page);
+        byte[] data = guildService.getLeaderboardImageFor(event.getGuild(), page, event.getMember());
         if(data == null) {
             hook.sendMessage(STR.":x: Il n'existe pas pas de page n°**\{page}** !").setEphemeral(true).queue();
             return;
