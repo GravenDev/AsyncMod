@@ -187,9 +187,9 @@ public class ImageGenerator {
             }
         }
 
-        int imageHeight = 185 + members.size() * 125 + (members.size() - 1) * 10 + (originalUser != null ? 175 : 0);
+        int imageHeight = 155 + members.size() * 125 + (members.size() - 1) * 10 + (originalUser != null ? 175 : 0);
 
-        BufferedImage image = new BufferedImage(1175, imageHeight, BufferedImage.TYPE_INT_RGB);
+        BufferedImage image = new BufferedImage(1145, imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
         g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -201,29 +201,29 @@ public class ImageGenerator {
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
         g2d.setColor(SECONDARY_BG);
-        g2d.fillRect(0, 0, 1175, imageHeight);
+        g2d.fillRect(0, 0, 1145, imageHeight);
 
-        drawServerIcon(g2d, dMembers.get(0).getGuild(), 25 + 25/2, 25 + 25/2, PRIMARY_BG);
+        drawServerIcon(g2d, dMembers.getFirst().getGuild(), 10 +25 / 2, 10 + 25 / 2, PRIMARY_BG);
 
         g2d.setColor(PRIMARY_BG);
-        g2d.fillRect(150, 25, 1000, 125);
+        g2d.fillRect(135, 10, 1000, 125);
 
         g2d.setFont(OUTFIT.deriveFont(40f));
         g2d.setColor(TEXT);
         g2d.setBackground(TEXT);
 
-        drawCenteredText(g2d, "Rang", 222.5f, 87.5f);
-        drawVCenteredText(g2d, "Nom d'utilisateur", 332.5f, 87.5f);
-        drawCenteredText(g2d, "Niv.", 1088, 87.5f);
+        drawCenteredText(g2d, "Rang", 207.5f, 72.5f);
+        drawVCenteredText(g2d, "Nom d'utilisateur", 317.5f, 72.5f);
+        drawCenteredText(g2d, "Niv.", 1073, 72.5f);
 
-        g2d.setFont(OUTFIT.deriveFont(48f));
+        g2d.setFont(OUTFIT.deriveFont(44f));
         for (int i = 0; i < members.size(); i++) {
             Member discordMember = dMembers.get(i);
             GravenMember gravenMember = members.get(i);
 
             Image avatar = ImageIO.read(discordMember.getEffectiveAvatar().download().join());
 
-            drawMemberPosition(g2d, 25 + (i + 1) * 135, discordMember.getColor(), avatar, (page - 1) * 10 + i + 1, gravenMember.level(), discordMember.getUser().getName());
+            drawMemberPosition(g2d, 10 + (i + 1) * 135, discordMember.getColor(), avatar, (page - 1) * 10 + i + 1, gravenMember.level(), discordMember.getUser().getName());
         }
 
         if (originalUser != null) {
@@ -233,7 +233,7 @@ public class ImageGenerator {
 
             drawMemberPosition(
                     g2d,
-                    imageHeight - 150,
+                    imageHeight - 135,
                     discordMember.getColor(),
                     avatar,
                     memberService.getRank(discordMember),
@@ -243,14 +243,14 @@ public class ImageGenerator {
         }
 
         g2d.setColor(SECONDARY_BG);
-        for (Integer x : List.of(150, 285, 1015)) {
+        for (Integer x : List.of(135, 270, 1000)) {
             g2d.fillRect(x, 0, 10, imageHeight);
         }
 
         if(originalUser != null) {
             g2d.setColor(PRIMARY_BG);
             g2d.setBackground(PRIMARY_BG);
-            g2d.fillRect(25, imageHeight - 180, 1125, 10);
+            g2d.fillRect(10, imageHeight - 165, 1125, 10);
         }
 
 
@@ -284,12 +284,12 @@ public class ImageGenerator {
 
     private void drawMemberPosition(Graphics2D g2d, int y, Color color, Image avatar, int rank, long level, String name) {
         g2d.setColor(PRIMARY_BG);
-        g2d.fillRect(25, y, 1125, 125);
+        g2d.fillRect(10, y, 1125, 125);
 
         g2d.setColor(color == null ? ORANGE : color);
-        g2d.fillRect(25, y, 125, 125);
+        g2d.fillRect(10, y, 125, 125);
 
-        g2d.drawImage(avatar, 30, y + 5, 115, 115, null);
+        g2d.drawImage(avatar, 15, y + 5, 115, 115, null);
 
         g2d.setColor(TEXT);
         switch (rank) {
@@ -298,12 +298,12 @@ public class ImageGenerator {
                 case 2 -> PODIUM_SILVER;
                 case 3 -> PODIUM_BRONZE;
                 default -> throw new IllegalStateException("Unexpected value: " + rank);
-            }, 185, y + 25, 75, 75, null);
-            default -> drawCenteredText(g2d, STR."#\{NumberUtils.formatNumber(rank)}", 222.5f, y + 62.5f);
+            }, 170, y + 25, 75, 75, null);
+            default -> drawCenteredText(g2d, NumberUtils.formatNumber(rank), 207.5f, y + 62.5f);
         }
-        drawVCenteredText(g2d, STR."@\{name}", 332.5f, y + 62.5f);
+        drawVCenteredText(g2d, STR."@\{name}", 317.5f, y + 62.5f);
 
-        drawCenteredText(g2d, NumberUtils.formatNumber(level), 1088, y + 62.5f);
+        drawCenteredText(g2d, NumberUtils.formatNumber(level), 1073, y + 62.5f);
     }
 
     private void drawCenteredText(Graphics2D g2d, String text, float x, float y) {
