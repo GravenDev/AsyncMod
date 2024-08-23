@@ -1,6 +1,6 @@
 package fr.redstom.gravenlevelling.events;
 
-import fr.redstom.gravenlevelling.jda.services.GravenMemberService;
+import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

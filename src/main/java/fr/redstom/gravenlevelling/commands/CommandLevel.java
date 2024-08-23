@@ -1,7 +1,7 @@
 package fr.redstom.gravenlevelling.commands;
 
-import fr.redstom.gravenlevelling.jda.entities.GravenMember;
-import fr.redstom.gravenlevelling.jda.services.GravenMemberService;
+import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
+import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import fr.redstom.gravenlevelling.utils.Command;
 import fr.redstom.gravenlevelling.utils.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.ImageGenerator;

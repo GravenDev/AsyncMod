@@ -1,6 +1,6 @@
 package fr.redstom.gravenlevelling.buttons;
 
-import fr.redstom.gravenlevelling.jda.services.GravenGuildService;
+import fr.redstom.gravenlevelling.jpa.services.GravenGuildService;
 import fr.redstom.gravenlevelling.utils.ButtonExecutor;
 import fr.redstom.gravenlevelling.utils.Command;
 import lombok.RequiredArgsConstructor;

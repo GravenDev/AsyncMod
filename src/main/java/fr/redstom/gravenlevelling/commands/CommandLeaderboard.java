@@ -1,15 +1,12 @@
 package fr.redstom.gravenlevelling.commands;
 
-import fr.redstom.gravenlevelling.jda.entities.GravenMember;
-import fr.redstom.gravenlevelling.jda.services.GravenGuildService;
-import fr.redstom.gravenlevelling.jda.services.GravenMemberService;
+import fr.redstom.gravenlevelling.jpa.services.GravenGuildService;
+import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import fr.redstom.gravenlevelling.utils.Command;
 import fr.redstom.gravenlevelling.utils.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.ImageGenerator;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -17,19 +14,9 @@ import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
-import net.dv8tion.jda.api.interactions.components.ActionRow;
-import net.dv8tion.jda.api.interactions.components.Component;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.buttons.ButtonStyle;
 import net.dv8tion.jda.api.utils.FileUpload;
-import org.springframework.data.domain.Page;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 @Command
 @RequiredArgsConstructor

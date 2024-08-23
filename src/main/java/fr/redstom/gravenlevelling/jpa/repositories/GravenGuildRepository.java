@@ -1,7 +1,6 @@
-package fr.redstom.gravenlevelling.jda.repositories;
+package fr.redstom.gravenlevelling.jpa.repositories;
 
-import fr.redstom.gravenlevelling.jda.entities.GravenGuild;
-import fr.redstom.gravenlevelling.jda.entities.GravenUser;
+import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

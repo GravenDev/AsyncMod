@@ -1,7 +1,7 @@
-package fr.redstom.gravenlevelling.jda.services;
+package fr.redstom.gravenlevelling.jpa.services;
 
-import fr.redstom.gravenlevelling.jda.entities.GravenUser;
-import fr.redstom.gravenlevelling.jda.repositories.GravenUserRepository;
+import fr.redstom.gravenlevelling.jpa.entities.GravenUser;
+import fr.redstom.gravenlevelling.jpa.repositories.GravenUserRepository;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.User;
 import org.springframework.stereotype.Service;

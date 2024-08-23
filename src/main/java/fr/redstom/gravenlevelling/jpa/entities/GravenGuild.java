@@ -1,12 +1,9 @@
-package fr.redstom.gravenlevelling.jda.entities;
+package fr.redstom.gravenlevelling.jpa.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
-
-import java.util.List;
 
 @Entity
 @Table

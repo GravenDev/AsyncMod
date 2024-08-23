@@ -1,4 +1,4 @@
-package fr.redstom.gravenlevelling.jda.entities;
+package fr.redstom.gravenlevelling.jpa.entities;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

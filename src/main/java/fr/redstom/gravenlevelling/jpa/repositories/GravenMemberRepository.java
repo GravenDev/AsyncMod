@@ -1,8 +1,8 @@
-package fr.redstom.gravenlevelling.jda.repositories;
+package fr.redstom.gravenlevelling.jpa.repositories;
 
-import fr.redstom.gravenlevelling.jda.entities.GravenGuild;
-import fr.redstom.gravenlevelling.jda.entities.GravenMember;
-import fr.redstom.gravenlevelling.jda.entities.GravenUser;
+import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
+import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
+import fr.redstom.gravenlevelling.jpa.entities.GravenUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;

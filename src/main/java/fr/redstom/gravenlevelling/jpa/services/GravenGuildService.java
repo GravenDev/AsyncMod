@@ -1,9 +1,9 @@
-package fr.redstom.gravenlevelling.jda.services;
+package fr.redstom.gravenlevelling.jpa.services;
 
-import fr.redstom.gravenlevelling.jda.entities.GravenGuild;
-import fr.redstom.gravenlevelling.jda.entities.GravenMember;
-import fr.redstom.gravenlevelling.jda.repositories.GravenGuildRepository;
-import fr.redstom.gravenlevelling.jda.repositories.GravenMemberRepository;
+import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
+import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
+import fr.redstom.gravenlevelling.jpa.repositories.GravenGuildRepository;
+import fr.redstom.gravenlevelling.jpa.repositories.GravenMemberRepository;
 import fr.redstom.gravenlevelling.utils.ImageGenerator;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;

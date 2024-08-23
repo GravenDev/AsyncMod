@@ -1,7 +1,7 @@
 package fr.redstom.gravenlevelling.utils;
 
-import fr.redstom.gravenlevelling.jda.entities.GravenMember;
-import fr.redstom.gravenlevelling.jda.services.GravenMemberService;
+import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
+import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -21,7 +21,6 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.function.Function;
 
 import static fr.redstom.gravenlevelling.utils.GravenColors.*;
