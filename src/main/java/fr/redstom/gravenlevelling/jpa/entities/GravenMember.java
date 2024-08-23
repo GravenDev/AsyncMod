@@ -2,6 +2,7 @@ package fr.redstom.gravenlevelling.jpa.entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.io.Serializable;
 import java.time.Instant;

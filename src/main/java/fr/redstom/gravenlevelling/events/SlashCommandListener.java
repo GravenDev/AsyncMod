@@ -36,10 +36,9 @@ public class SlashCommandListener extends ListenerAdapter {
         executors.stream()
                 .filter(ex -> ex.data().getName().equalsIgnoreCase(event.getName()))
                 .findFirst()
-                .ifPresentOrElse(ex -> {
-                    ex.autocomplete(event);
-                }, () -> {
-                    event.replyChoices(List.of()).queue();
-                });
+                .ifPresentOrElse(
+                        ex -> ex.autocomplete(event),
+                        () -> event.replyChoices(List.of()).queue()
+                );
     }
 }

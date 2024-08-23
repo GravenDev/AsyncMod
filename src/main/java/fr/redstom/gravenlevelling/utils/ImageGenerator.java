@@ -21,6 +21,7 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import static fr.redstom.gravenlevelling.utils.GravenColors.*;
@@ -181,12 +182,12 @@ public class ImageGenerator {
 
         GravenMember originalUser = user;
         if (user != null) {
-            if(members.stream().anyMatch(u -> user.user().id() == u.user().id())) {
+            if (members.stream().anyMatch(u -> user.user().id() == u.user().id())) {
                 originalUser = null;
             }
         }
 
-        int imageHeight = 155 + members.size() * 125 + (members.size() - 1) * 10 + (originalUser != null ? 175 : 0);
+        int imageHeight = 155 + /*members.size()*/10 * 125 + (/*members.size() - 1*/9) * 10 + (originalUser != null ? 175 : 0);
 
         BufferedImage image = new BufferedImage(1145, imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
@@ -202,7 +203,7 @@ public class ImageGenerator {
         g2d.setColor(SECONDARY_BG);
         g2d.fillRect(0, 0, 1145, imageHeight);
 
-        drawServerIcon(g2d, dMembers.getFirst().getGuild(), 10 +25 / 2, 10 + 25 / 2, PRIMARY_BG);
+        drawServerIcon(g2d, dMembers.getFirst().getGuild(), 10 + 25 / 2, 10 + 25 / 2, PRIMARY_BG);
 
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(135, 10, 1000, 125);
@@ -223,6 +224,9 @@ public class ImageGenerator {
             Image avatar = ImageIO.read(discordMember.getEffectiveAvatar().download().join());
 
             drawMemberPosition(g2d, 10 + (i + 1) * 135, discordMember.getColor(), avatar, (page - 1) * 10 + i + 1, gravenMember.level(), discordMember.getUser().getName());
+        }
+        for (int i = 0; i < 10 - members.size(); i++) {
+            drawMemberPosition(g2d, members.size() * 135 + 10 + (i + 1) * 135, Color.BLACK, null, -1, -1, null);
         }
 
         if (originalUser != null) {
@@ -246,7 +250,7 @@ public class ImageGenerator {
             g2d.fillRect(x, 0, 10, imageHeight);
         }
 
-        if(originalUser != null) {
+        if (originalUser != null) {
             g2d.setColor(PRIMARY_BG);
             g2d.setBackground(PRIMARY_BG);
             g2d.fillRect(10, imageHeight - 165, 1125, 10);
@@ -285,7 +289,7 @@ public class ImageGenerator {
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(10, y, 1125, 125);
 
-        g2d.setColor(color == null ? ORANGE : color);
+        g2d.setColor(color == null ? ORANGE : color == Color.BLACK ? null : color);
         g2d.fillRect(10, y, 125, 125);
 
         g2d.drawImage(avatar, 15, y + 5, 115, 115, null);
@@ -298,11 +302,21 @@ public class ImageGenerator {
                 case 3 -> PODIUM_BRONZE;
                 default -> throw new IllegalStateException("Unexpected value: " + rank);
             }, 170, y + 25, 75, 75, null);
-            default -> drawCenteredText(g2d, NumberUtils.formatNumber(rank), 207.5f, y + 62.5f);
+            case -1 -> drawCenteredText(g2d, "-", 207.5f, y + 62.5f);
+            default -> withComputedFontSize(g2d, NumberUtils.formatNumber(rank), 100, (text) -> {
+                drawCenteredText(g2d, text, 207.5f, y + 62.5f);
+            });
         }
-        drawVCenteredText(g2d, STR."@\{name}", 317.5f, y + 62.5f);
 
-        drawCenteredText(g2d, NumberUtils.formatNumber(level), 1073, y + 62.5f);
+            drawVCenteredText(g2d, STR."\{name != null ? STR."@\{name}" : "-"}", 317.5f, y + 62.5f);
+
+        if (level < 0) {
+            drawCenteredText(g2d, "-", 1073, y + 62.5f);
+        } else {
+            withComputedFontSize(g2d, NumberUtils.formatNumber(level), 100, (text) -> {
+                drawCenteredText(g2d, text, 1073, y + 62.5f);
+            });
+        }
     }
 
     private void drawCenteredText(Graphics2D g2d, String text, float x, float y) {
@@ -313,5 +327,23 @@ public class ImageGenerator {
     private void drawVCenteredText(Graphics2D g2d, String text, float x, float y) {
         FontMetrics metrics = g2d.getFontMetrics();
         g2d.drawString(text, x, y - metrics.getHeight() / 2f + metrics.getAscent());
+    }
+
+    private void withComputedFontSize(Graphics2D g2d, String text, int targetMaxWidth, Consumer<String> action) {
+        Font original = g2d.getFont();
+        Font font = original;
+
+        FontMetrics metrics = g2d.getFontMetrics(font);
+
+        while (metrics.stringWidth(text) > targetMaxWidth) {
+            font = font.deriveFont(font.getSize() - 1f);
+            metrics = g2d.getFontMetrics(font);
+
+            if (font.getSize() == 1) break;
+        }
+
+        g2d.setFont(font);
+        action.accept(text);
+        g2d.setFont(original);
     }
 }

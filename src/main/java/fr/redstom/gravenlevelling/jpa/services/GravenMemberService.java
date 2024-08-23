@@ -19,7 +19,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
 @Service
-@RequiredArgsConstructor
+@RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class GravenMemberService {
 
     private final LevelUtils levelUtils;
@@ -27,10 +27,9 @@ public class GravenMemberService {
     private final GravenMemberRepository memberRepository;
     private final GravenGuildService guildService;
     private final GravenUserService userService;
+    private final GravenGuildRewardService rewardService;
 
-    @Autowired
-    @Lazy
-    private JDA jda;
+    private final JDA jda;
 
     @Transactional
     public GravenMember getMemberByDiscordMember(Member member) {
@@ -78,6 +77,7 @@ public class GravenMemberService {
 
         gMember.experience(gMember.experience() % xpToNextLevel);
         gMember.level(gMember.level() + 1);
+        rewardService.grantReward(member, gMember.level());
 
         memberRepository.save(gMember);
 
