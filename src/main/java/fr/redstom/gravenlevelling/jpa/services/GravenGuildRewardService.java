@@ -1,9 +1,8 @@
 package fr.redstom.gravenlevelling.jpa.services;
 
-import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
 import fr.redstom.gravenlevelling.jpa.GravenGuildReward;
 import fr.redstom.gravenlevelling.jpa.GravenGuildRewardRepository;
-import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
+import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
@@ -56,24 +55,19 @@ public class GravenGuildRewardService {
     public void grantReward(Member member, long level) {
         Optional<GravenGuildReward> oReward = getClosestRewardForGuildAtLevel(member.getGuild(), level);
         if (oReward.isEmpty()) {
-            System.out.println(1);
             return;
         }
 
         GravenGuildReward reward = oReward.get();
         if (member.getRoles().stream().anyMatch(role -> role.getIdLong() == reward.roleId())) {
-            System.out.println(2);
             return;
         }
 
         Role role = member.getGuild().getRoleById(reward.roleId());
         if (role == null) {
-            System.out.println(3);
             return;
         }
-        member.getGuild().addRoleToMember(member, role).queue(_ -> {
-            System.out.println(STR."Granted \{role.getName()} to \{member.getEffectiveName()}");
-        });
+        member.getGuild().addRoleToMember(member, role).queue();
     }
 
     public void delete(GravenGuildReward reward) {

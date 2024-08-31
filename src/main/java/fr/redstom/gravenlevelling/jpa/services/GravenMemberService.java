@@ -11,7 +11,6 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -25,9 +24,11 @@ public class GravenMemberService {
     private final LevelUtils levelUtils;
 
     private final GravenMemberRepository memberRepository;
+
     private final GravenGuildService guildService;
     private final GravenUserService userService;
     private final GravenGuildRewardService rewardService;
+    private final GuildGuildNotificationService notificationService;
 
     private final JDA jda;
 
@@ -78,8 +79,10 @@ public class GravenMemberService {
         gMember.experience(gMember.experience() % xpToNextLevel);
         gMember.level(gMember.level() + 1);
         rewardService.grantReward(member, gMember.level());
+        notificationService.sendNotification(member, gMember.level());
 
         memberRepository.save(gMember);
+
 
         return true;
     }
@@ -95,7 +98,6 @@ public class GravenMemberService {
         Member member = guild.getMemberById(gravenMember.user().id());
 
         if(member == null) {
-            System.out.println("Not found, fetching " + gravenMember.user().id());
             member = guild.retrieveMemberById(gravenMember.user().id())
                     .useCache(true)
                     .complete();

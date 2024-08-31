@@ -126,7 +126,6 @@ public class CommandReward implements CommandExecutor {
 
     @Override
     public void autocomplete(CommandAutoCompleteInteractionEvent event) {
-        System.out.println(event.getSubcommandName());
         if (event.getSubcommandName().equalsIgnoreCase("remove")) {
             List<net.dv8tion.jda.api.interactions.commands.Command.Choice> list = guildRewardService.getRewardsForGuild(event.getGuild())
                     .stream()
