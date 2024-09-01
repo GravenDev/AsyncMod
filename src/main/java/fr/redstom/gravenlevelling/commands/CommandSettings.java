@@ -1,17 +1,20 @@
 package fr.redstom.gravenlevelling.commands;
 
 import fr.redstom.gravenlevelling.jpa.services.GravenGuildSettingsService;
-import fr.redstom.gravenlevelling.utils.Command;
-import fr.redstom.gravenlevelling.utils.CommandExecutor;
+import fr.redstom.gravenlevelling.utils.jda.Command;
+import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
+import fr.redstom.gravenlevelling.utils.jda.ModalHandler;
 import lombok.RequiredArgsConstructor;
-import net.dv8tion.jda.api.entities.channel.unions.ChannelUnion;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
+import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
+import net.dv8tion.jda.api.interactions.components.text.TextInput;
+import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
 
 @Command
 @RequiredArgsConstructor
@@ -32,10 +35,8 @@ public class CommandSettings implements CommandExecutor {
                                 .addOption(OptionType.BOOLEAN, "enabled", "Active ou désactive les notifications de montée de niveau", true),
                         new SubcommandData("set-reward-notifications", "Active ou désactive les notifications de récompense")
                                 .addOption(OptionType.BOOLEAN, "enabled", "Active ou désactive les notifications de récompense", true),
-                        new SubcommandData("set-notification-message", "Définit le message de notification de montée de niveau")
-                                .addOption(OptionType.STRING, "message", "Le message de notification de montée de niveau", true),
-                        new SubcommandData("set-reward-notification-message", "Définit le message de notification de récompense")
-                                .addOption(OptionType.STRING, "message", "Le message de notification de récompense", true),
+                        new SubcommandData("set-notification-message", "Définit le message de notification de montée de niveau"),
+                        new SubcommandData("set-reward-notification-message", "Définit le message de notification de récompense"),
                         new SubcommandData("get-placeholders", "Renvoie la liste des placeholders utilisables dans les messages de notification")
                 )
                 .setDefaultPermissions(DefaultMemberPermissions.DISABLED);
@@ -86,17 +87,19 @@ public class CommandSettings implements CommandExecutor {
     }
 
     private void setNotificationMessage(SlashCommandInteractionEvent event) {
-        String message = event.getOption("message").getAsString();
-
-        settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().notificationMessage(message).build());
-        event.reply("Le message de notification a été mis à jour").queue();
+        event.replyModal(net.dv8tion.jda.api.interactions.modals.Modal.create("set-notification-message", "Changer le message de notification")
+                        .addActionRow(TextInput.create("message", "Message de notification", TextInputStyle.PARAGRAPH)
+                                .build())
+                        .build())
+                .queue();
     }
 
     private void setRewardNotificationMessage(SlashCommandInteractionEvent event) {
-        String message = event.getOption("message").getAsString();
-
-        settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().rewardNotificationMessage(message).build());
-        event.reply("Le message de notification de récompense a été mis à jour").queue();
+        event.replyModal(net.dv8tion.jda.api.interactions.modals.Modal.create("set-reward-notification-message", "Changer le message de notification de récompense")
+                        .addActionRow(TextInput.create("message", "Message de notification", TextInputStyle.PARAGRAPH)
+                                .build())
+                        .build())
+                .queue();
     }
 
     private void sendPlaceholders(SlashCommandInteractionEvent event) {
@@ -112,5 +115,21 @@ public class CommandSettings implements CommandExecutor {
                 
                 - `%level%` : Niveau atteint
                 """).queue();
+    }
+
+    @ModalHandler("set-reward-notification-message")
+    public void setRewardNotificationMessage(ModalInteractionEvent event) {
+        String message = event.getValue("message").getAsString();
+
+        settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().rewardNotificationMessage(message).build());
+        event.reply("Le message de notification de récompense a été mis à jour").queue();
+    }
+
+    @ModalHandler("set-notification-message")
+    public void setNotificationMessage(ModalInteractionEvent event) {
+        String message = event.getValue("message").getAsString();
+
+        settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().notificationMessage(message).build());
+        event.reply("Le message de notification a été mis à jour").queue();
     }
 }
