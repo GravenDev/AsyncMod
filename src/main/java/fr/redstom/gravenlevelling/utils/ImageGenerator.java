@@ -243,7 +243,9 @@ public class ImageGenerator {
             Member discordMember = dMembers.get(i);
 
             if(discordMember == null) {
-                drawMemberPosition(g2d, 10 + (i + 1) * 135, Color.BLACK, null, -1, -1, null);
+                GravenMember gravenMember = members.get(i);
+
+                drawMemberPosition(g2d, 10 + (i + 1) * 135, Color.BLACK, null, (page - 1) * 10 + i + 1, gravenMember.level(), "Utilisateur introuvable");
                 continue;
             }
 
