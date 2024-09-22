@@ -14,6 +14,7 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -30,7 +31,8 @@ public class CommandLevel implements CommandExecutor {
     @Override
     public SlashCommandData data() {
         return Commands.slash("level", "Permet de voir votre niveau actuel sur le serveur")
-                .addOption(OptionType.USER, "user", "Membre dont vous voulez savoir le niveau", false);
+                .addOption(OptionType.USER, "user", "Membre dont vous voulez savoir le niveau", false)
+                .setDefaultPermissions(DefaultMemberPermissions.ENABLED);
     }
 
     @SneakyThrows

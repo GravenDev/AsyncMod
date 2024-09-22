@@ -16,6 +16,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
@@ -37,7 +38,8 @@ public class CommandImport implements CommandExecutor {
                                 .addOption(OptionType.ATTACHMENT, "file", "Fichier JSON à importer dans le format [{ id: long, level: long }]", true),
                         new SubcommandData("roles", "Active ou désactive l'importation depuis des rôles Discord")
                                 .addOption(OptionType.BOOLEAN, "enable", "Activer ou désactiver l'importation depuis des rôles Discord", true)
-                );
+                )
+                .setDefaultPermissions(DefaultMemberPermissions.DISABLED);
     }
 
     @Override

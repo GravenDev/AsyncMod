@@ -9,6 +9,7 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
@@ -26,7 +27,8 @@ public class CommandLeaderboard implements CommandExecutor {
     @Override
     public SlashCommandData data() {
         return Commands.slash("leaderboard", "Affiche le tableau des scores")
-                .addOption(OptionType.INTEGER, "page", "Page du tableau des scores", false, false);
+                .addOption(OptionType.INTEGER, "page", "Page du tableau des scores", false, false)
+                .setDefaultPermissions(DefaultMemberPermissions.ENABLED);
     }
 
     @Override
