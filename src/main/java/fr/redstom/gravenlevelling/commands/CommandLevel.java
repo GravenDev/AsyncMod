@@ -40,6 +40,7 @@ public class CommandLevel implements CommandExecutor {
 
         if(discordMember == null) {
             event.replyEmbeds(EmbedUtils.error("Impossible de trouver le membre spécifié").build()).queue();
+            return;
         }
 
         InteractionHook hook = event.deferReply().complete();
