@@ -2,9 +2,9 @@ package fr.redstom.gravenlevelling.commands;
 
 import fr.redstom.gravenlevelling.jpa.services.GravenGuildService;
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
-import fr.redstom.gravenlevelling.utils.Command;
-import fr.redstom.gravenlevelling.utils.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.ImageGenerator;
+import fr.redstom.gravenlevelling.utils.jda.Command;
+import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -46,8 +46,7 @@ public class CommandLeaderboard implements CommandExecutor {
             return;
         }
 
-        hook
-                .editOriginalAttachments(FileUpload.fromData(data, "image.png"))
+        hook.editOriginalAttachments(FileUpload.fromData(data, "image.png"))
                 .setActionRow(
                         Button.of(ButtonStyle.PRIMARY, STR."lb-previous;\{page}", "Précédent", Emoji.fromUnicode("⬅\uFE0F"))
                                 .withDisabled(page == 1),

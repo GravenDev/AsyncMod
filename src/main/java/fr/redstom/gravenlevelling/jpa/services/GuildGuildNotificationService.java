@@ -1,22 +1,18 @@
 package fr.redstom.gravenlevelling.jpa.services;
 
-import fr.redstom.gravenlevelling.jpa.GravenGuildReward;
+import fr.redstom.gravenlevelling.jpa.entities.GravenGuildReward;
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuildSettings;
 import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
 import fr.redstom.gravenlevelling.utils.PlaceholderMessage;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

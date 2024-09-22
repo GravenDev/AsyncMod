@@ -1,7 +1,7 @@
 package fr.redstom.gravenlevelling.buttons;
 
-import fr.redstom.gravenlevelling.utils.ButtonExecutor;
-import fr.redstom.gravenlevelling.utils.Command;
+import fr.redstom.gravenlevelling.utils.jda.ButtonExecutor;
+import fr.redstom.gravenlevelling.utils.jda.Command;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;

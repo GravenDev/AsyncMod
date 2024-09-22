@@ -1,6 +1,5 @@
-package fr.redstom.gravenlevelling.jpa;
+package fr.redstom.gravenlevelling.jpa.entities;
 
-import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
 import jakarta.persistence.*;
 import lombok.*;
 

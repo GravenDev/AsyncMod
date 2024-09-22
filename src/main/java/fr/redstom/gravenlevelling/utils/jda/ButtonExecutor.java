@@ -1,4 +1,4 @@
-package fr.redstom.gravenlevelling.utils;
+package fr.redstom.gravenlevelling.utils.jda;
 
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 

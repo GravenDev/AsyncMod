@@ -1,13 +1,12 @@
 package fr.redstom.gravenlevelling.events;
 
-import fr.redstom.gravenlevelling.utils.ButtonExecutor;
+import fr.redstom.gravenlevelling.utils.jda.ButtonExecutor;
+import java.util.Arrays;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

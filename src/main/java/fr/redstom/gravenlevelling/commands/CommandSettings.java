@@ -108,11 +108,11 @@ public class CommandSettings implements CommandExecutor {
                 - `%user.mention%` : Mentionne l'utilisateur
                 - `%user.name%` : Nom de l'utilisateur
                 - `%user.id%` : Id de l'utilisateur
-                
+
                 - `%reward.mention%` : Mentionne le rôle gagné
                 - `%reward.name%` : Nom du rôle gagné
                 - `%reward.id%` : Id du rôle gagné
-                
+
                 - `%level%` : Niveau atteint
                 """).queue();
     }

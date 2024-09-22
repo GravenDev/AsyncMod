@@ -1,6 +1,7 @@
 package fr.redstom.gravenlevelling.config;
 
-import fr.redstom.gravenlevelling.utils.CommandExecutor;
+import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
+import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -10,8 +11,6 @@ import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
 
 @Configuration
 @Slf4j

@@ -1,15 +1,10 @@
 package fr.redstom.gravenlevelling.utils;
 
+import static fr.redstom.gravenlevelling.utils.GravenColors.*;
+
 import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import jakarta.annotation.Nullable;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import org.springframework.stereotype.Service;
-
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -23,8 +18,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import static fr.redstom.gravenlevelling.utils.GravenColors.*;
+import javax.imageio.ImageIO;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -138,7 +137,6 @@ public class ImageGenerator {
 
         g2d.setFont(titleFont);
         g2d.drawString(levelTitle, levelTextX, 177 + 36);
-
 
         g2d.drawImage(TROPHEE, startingWidth + levelWidth + imageSize + margin * 3, 177, imageSize, imageSize, null);
         String experienceContent = STR."\{levelUtils.formatExperience(gMember.experience(), gMember.level())}";

@@ -6,6 +6,8 @@ import fr.redstom.gravenlevelling.jpa.entities.GravenUser;
 import fr.redstom.gravenlevelling.jpa.repositories.GravenMemberRepository;
 import fr.redstom.gravenlevelling.utils.LevelUtils;
 import jakarta.transaction.Transactional;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -13,9 +15,6 @@ import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Lazy)

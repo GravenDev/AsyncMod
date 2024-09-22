@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import net.dv8tion.jda.api.entities.channel.ChannelType;
 
-import java.io.Serializable;
-
 @Entity
 @Table
 
@@ -35,6 +33,9 @@ public class GravenGuildSettings {
     private boolean levelNotificationEnabled = true;
     @Builder.Default
     private boolean rewardNotificationEnabled = true;
+
+    @Builder.Default
+    private boolean autoLevelGrant = true;
 
     @Builder.Default
     private String notificationMessage = "Bravo %user.mention%, tu as atteint le niveau %level% !";

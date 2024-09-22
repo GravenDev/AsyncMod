@@ -7,6 +7,9 @@ import fr.redstom.gravenlevelling.jpa.repositories.GravenMemberRepository;
 import fr.redstom.gravenlevelling.utils.ImageGenerator;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Guild;
@@ -15,10 +18,6 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = @__(@Lazy))

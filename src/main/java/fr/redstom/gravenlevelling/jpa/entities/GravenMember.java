@@ -1,10 +1,9 @@
 package fr.redstom.gravenlevelling.jpa.entities;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.io.Serializable;
 import java.time.Instant;
+import lombok.*;
 
 @Entity
 @Table

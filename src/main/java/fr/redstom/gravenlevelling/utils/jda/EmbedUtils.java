@@ -1,5 +1,6 @@
-package fr.redstom.gravenlevelling.utils;
+package fr.redstom.gravenlevelling.utils.jda;
 
+import fr.redstom.gravenlevelling.utils.GravenColors;
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class EmbedUtils {

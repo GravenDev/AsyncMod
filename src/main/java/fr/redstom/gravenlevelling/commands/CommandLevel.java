@@ -2,9 +2,12 @@ package fr.redstom.gravenlevelling.commands;
 
 import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
-import fr.redstom.gravenlevelling.utils.Command;
-import fr.redstom.gravenlevelling.utils.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.ImageGenerator;
+import fr.redstom.gravenlevelling.utils.jda.Command;
+import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import javax.imageio.ImageIO;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Member;
@@ -15,10 +18,6 @@ import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.utils.FileUpload;
-
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 
 @Command
 @RequiredArgsConstructor

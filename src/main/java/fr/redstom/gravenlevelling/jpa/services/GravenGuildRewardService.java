@@ -1,18 +1,17 @@
 package fr.redstom.gravenlevelling.jpa.services;
 
-import fr.redstom.gravenlevelling.jpa.GravenGuildReward;
-import fr.redstom.gravenlevelling.jpa.GravenGuildRewardRepository;
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
+import fr.redstom.gravenlevelling.jpa.entities.GravenGuildReward;
+import fr.redstom.gravenlevelling.jpa.repositories.GravenGuildRewardRepository;
 import jakarta.transaction.Transactional;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

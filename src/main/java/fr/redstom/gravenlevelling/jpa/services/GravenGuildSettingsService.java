@@ -3,11 +3,10 @@ package fr.redstom.gravenlevelling.jpa.services;
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuildSettings;
 import fr.redstom.gravenlevelling.jpa.repositories.GravenGuildSettingsRepository;
+import java.util.function.UnaryOperator;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Guild;
 import org.springframework.stereotype.Service;
-
-import java.util.function.UnaryOperator;
 
 @Service
 @RequiredArgsConstructor
