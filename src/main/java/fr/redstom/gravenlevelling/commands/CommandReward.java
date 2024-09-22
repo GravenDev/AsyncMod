@@ -1,15 +1,11 @@
 package fr.redstom.gravenlevelling.commands;
 
-import static fr.redstom.gravenlevelling.buttons.DeleteButton.DELETE_BUTTON;
-
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuildReward;
 import fr.redstom.gravenlevelling.jpa.services.GravenGuildRewardService;
 import fr.redstom.gravenlevelling.utils.GravenColors;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.jda.EmbedUtils;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
@@ -22,6 +18,11 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.dao.DataIntegrityViolationException;
+
+import java.util.List;
+import java.util.Optional;
+
+import static fr.redstom.gravenlevelling.buttons.DeleteButton.DELETE_BUTTON;
 
 @Command
 @RequiredArgsConstructor
@@ -71,7 +72,7 @@ public class CommandReward implements CommandExecutor {
                     .queue();
         } catch (DataIntegrityViolationException _) {
             event.replyEmbeds(EmbedUtils
-                            .error(STR."Il existe déjà une récompense associée au **niveau \{level}** !")
+                            .error("Il existe déjà une récompense associée au **niveau " + level + "** !")
                             .build())
                     .addActionRow(DELETE_BUTTON)
                     .queue();
@@ -85,7 +86,7 @@ public class CommandReward implements CommandExecutor {
 
         if (reward.isEmpty()) {
             event.replyEmbeds(EmbedUtils
-                            .error(STR."Il n'existe aucune récompense au niveau **\{level}** !")
+                            .error("Il n'existe aucune récompense au niveau **" + level + "** !")
                             .build())
                     .addActionRow(DELETE_BUTTON)
                     .queue();
@@ -93,11 +94,11 @@ public class CommandReward implements CommandExecutor {
         }
 
         guildRewardService.delete(reward.get());
-        String role = STR."**<@&\{reward.get().roleId()}>**";
+        String role = "**<@&" + reward.get().roleId() + ">**";
 
         event.replyEmbeds(new EmbedBuilder()
                         .setTitle("❗ Récompense supprimée")
-                        .setDescription(STR."Le rôle \{role} n'est plus une récompense au **niveau \{level}**.")
+                        .setDescription("Le rôle " + role + " n'est plus une récompense au **niveau " + level + "**.")
                         .setColor(GravenColors.GREEN)
                         .build())
                 .addActionRow(DELETE_BUTTON)
@@ -110,11 +111,11 @@ public class CommandReward implements CommandExecutor {
         StringBuilder rewards = new StringBuilder();
 
         for (GravenGuildReward reward : rewardsForGuild) {
-            rewards.append(STR."Niveau **\{reward.level()}** : <@&\{reward.roleId()}>\n");
+            rewards.append("Niveau **" + reward.level() + "** : <@&" + reward.roleId() + ">\n");
         }
 
         event.replyEmbeds(new EmbedBuilder()
-                        .setTitle(STR."Récompenses sur \{event.getGuild().getName()}")
+                        .setTitle("Récompenses sur " + event.getGuild().getName())
                         .setDescription(rewards.toString())
                         .setColor(GravenColors.PRIMARY)
                         .setAuthor(event.getGuild().getName(), null, event.getGuild().getIconUrl())
@@ -131,7 +132,7 @@ public class CommandReward implements CommandExecutor {
                     .map(reward -> {
                         String name = event.getGuild().getRoleById(reward.roleId()).getName();
                         return new Choice(
-                                STR."Niveau \{reward.level()} | Rôle : \{name}",
+                                "Niveau " + reward.level() + " | Rôle : " + name,
                                 reward.level()
                         );
                     })

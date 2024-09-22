@@ -20,10 +20,10 @@ public class DeleteButton implements ButtonExecutor {
 
     @Override
     public void execute(ButtonInteractionEvent event, String[] args) {
-        event.deferReply().queue((hook) -> {
-            event.getMessage().delete().queue(_ -> {
-                hook.deleteOriginal().queue();
-            });
-        });
+        event.deferReply().queue(
+                (hook) -> event.getMessage().delete().queue(
+                        _ -> hook.deleteOriginal().queue()
+                )
+        );
     }
 }

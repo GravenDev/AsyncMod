@@ -18,7 +18,7 @@ public class PlaceholderMessage {
     public String replace() {
         String result = message;
         for (Map.Entry<String, String> entry : placeholders.entrySet()) {
-            result = result.replace(STR."%\{entry.getKey()}%", entry.getValue());
+            result = result.replace("%" + entry.getKey() + "%", entry.getValue());
         }
         return result;
     }

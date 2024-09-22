@@ -8,6 +8,9 @@ import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.stereotype.Service;
@@ -16,13 +19,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ModalListener extends ListenerAdapter implements BeanPostProcessor {
 
+    private static final Logger log = LoggerFactory.getLogger(ModalListener.class);
     Map<String, Consumer<ModalInteractionEvent>> handlers = new HashMap<>();
 
     /**
      * Loads all methods annotated with {@link ModalHandler} and stores them in a map
      */
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, @NotNull String beanName) throws BeansException {
         for (Method method : bean.getClass().getMethods()) {
             if (method.isAnnotationPresent(ModalHandler.class)) {
                 if(method.getParameterTypes().length != 1 || !method.getParameterTypes()[0].equals(ModalInteractionEvent.class)) {
@@ -35,7 +39,7 @@ public class ModalListener extends ListenerAdapter implements BeanPostProcessor 
                     try {
                         method.invoke(bean, event);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        log.error("Error while invoking method annotated with @ModalHandler", e);
                     }
                 });
             }

@@ -1,8 +1,6 @@
 package fr.redstom.gravenlevelling.commands;
 
 import fr.redstom.gravenlevelling.jpa.services.GravenGuildService;
-import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
-import fr.redstom.gravenlevelling.utils.ImageGenerator;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +21,6 @@ import net.dv8tion.jda.api.utils.FileUpload;
 public class CommandLeaderboard implements CommandExecutor {
 
     private final GravenGuildService guildService;
-    private final GravenMemberService memberService;
-
-    private final ImageGenerator imageGenerator;
 
     @Override
     public SlashCommandData data() {
@@ -42,16 +37,16 @@ public class CommandLeaderboard implements CommandExecutor {
         byte[] data = guildService.getLeaderboardImageFor(event.getGuild(), page, event.getMember());
 
         if (data == null) {
-            hook.editOriginal(STR.":x: Il n'existe pas pas de page n°**\{page}** !").queue();
+            hook.editOriginal(":x: Il n'existe pas pas de page n°**" + page + "** !").queue();
             return;
         }
 
         hook.editOriginalAttachments(FileUpload.fromData(data, "image.png"))
                 .setActionRow(
-                        Button.of(ButtonStyle.PRIMARY, STR."lb-previous;\{page}", "Précédent", Emoji.fromUnicode("⬅\uFE0F"))
+                        Button.of(ButtonStyle.PRIMARY, "lb-previous;" + page, "Précédent", Emoji.fromUnicode("⬅️"))
                                 .withDisabled(page == 1),
-                        Button.of(ButtonStyle.SUCCESS, "euuuuuuuh", STR."Page \{page}").asDisabled(),
-                        Button.of(ButtonStyle.PRIMARY, STR."lb-next;\{page}", "Suivant", Emoji.fromUnicode("➡\uFE0F"))
+                        Button.of(ButtonStyle.SUCCESS, "euuuuuuuh", "Page " + page).asDisabled(),
+                        Button.of(ButtonStyle.PRIMARY, "lb-next;" + page, "Suivant", Emoji.fromUnicode("➡️"))
                 )
                 .queue();
     }

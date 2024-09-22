@@ -1,10 +1,15 @@
 package fr.redstom.gravenlevelling.utils;
 
-import static fr.redstom.gravenlevelling.utils.GravenColors.*;
-
 import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import jakarta.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import org.springframework.stereotype.Service;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -18,12 +23,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.imageio.ImageIO;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import org.springframework.stereotype.Service;
+
+import static fr.redstom.gravenlevelling.utils.GravenColors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -39,9 +40,6 @@ public class ImageGenerator {
     public static final Image PODIUM_GOLD;
     public static final Image STAR;
     public static final Image TROPHEE;
-
-    private final LevelUtils levelUtils;
-    private final GravenMemberService memberService;
 
     static {
         DecimalFormatSymbols decimalFormatSymbols = RANK_FORMATTER.getDecimalFormatSymbols();
@@ -60,6 +58,33 @@ public class ImageGenerator {
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private final LevelUtils levelUtils;
+    private final GravenMemberService memberService;
+
+    private static void drawServerIcon(Graphics2D g2d, Guild guild, int x, int y, Color defaultBg) throws IOException {
+        g2d.setClip(new Ellipse2D.Double(x, y, 100, 100));
+
+        g2d.setColor(defaultBg);
+        g2d.fillRect(x, y, 100, 100);
+
+        if (guild.getIcon() != null) {
+            InputStream serverLogo = guild.getIcon().download(512).join();
+            BufferedImage serverLogoAsImage = ImageIO.read(serverLogo);
+
+            g2d.drawImage(serverLogoAsImage, x, y, 100, 100, null);
+        } else {
+            g2d.setFont(OUTFIT.deriveFont(24f));
+            FontMetrics abbreviationMetrics = g2d.getFontMetrics();
+            String serverAbbreviation = Arrays.stream(guild.getName().split(" ")).reduce("", (a, b) -> a + b.charAt(0));
+            int serverAbbreviationWidth = abbreviationMetrics.stringWidth(serverAbbreviation);
+
+            g2d.setColor(TEXT);
+            g2d.setBackground(TEXT);
+            g2d.drawString(serverAbbreviation, x + 50 - serverAbbreviationWidth / 2, y + 50 - abbreviationMetrics.getHeight() / 2 + abbreviationMetrics.getAscent());
+        }
+        g2d.setClip(null);
     }
 
     @SneakyThrows
@@ -100,7 +125,7 @@ public class ImageGenerator {
         g2d.setBackground(accent);
         g2d.fillRect(0, 350, (int) (advancement * 1600), 50);
 
-        String text = STR."@\{member.getUser().getName()}";
+        String text = "@" + member.getUser().getName();
 
         Font actualFont = OUTFIT.deriveFont(Font.BOLD, 72f);
         FontMetrics metrics = g2d.getFontMetrics(actualFont);
@@ -127,7 +152,7 @@ public class ImageGenerator {
         int margin = 25;
 
         g2d.drawImage(STAR, startingWidth, 177, imageSize, imageSize, null);
-        String levelContent = STR."\{gMember.level()}";
+        String levelContent = String.valueOf(gMember.level());
         String levelTitle = "Niveau :";
         int levelWidth = Math.max(contentMetrics.stringWidth(levelContent), titleMetrics.stringWidth(levelTitle));
 
@@ -139,7 +164,7 @@ public class ImageGenerator {
         g2d.drawString(levelTitle, levelTextX, 177 + 36);
 
         g2d.drawImage(TROPHEE, startingWidth + levelWidth + imageSize + margin * 3, 177, imageSize, imageSize, null);
-        String experienceContent = STR."\{levelUtils.formatExperience(gMember.experience(), gMember.level())}";
+        String experienceContent = levelUtils.formatExperience(gMember.experience(), gMember.level());
         String experienceTitle = "Expérience :";
         int experienceWidth = Math.max(contentMetrics.stringWidth(experienceContent), titleMetrics.stringWidth(experienceTitle));
 
@@ -258,31 +283,6 @@ public class ImageGenerator {
         return image;
     }
 
-    private static void drawServerIcon(Graphics2D g2d, Guild guild, int x, int y, Color defaultBg) throws IOException {
-        g2d.setClip(new Ellipse2D.Double(x, y, 100, 100));
-
-        g2d.setColor(defaultBg);
-        g2d.fillRect(x, y, 100, 100);
-
-        if (guild.getIcon() != null) {
-            InputStream serverLogo = guild.getIcon().download(512).join();
-            BufferedImage serverLogoAsImage = ImageIO.read(serverLogo);
-
-            g2d.drawImage(serverLogoAsImage, x, y, 100, 100, null);
-        } else {
-            g2d.setFont(OUTFIT.deriveFont(24f));
-            FontMetrics abbreviationMetrics = g2d.getFontMetrics();
-            String serverAbbreviation = Arrays.stream(guild.getName().split(" ")).reduce("", (a, b) -> a + b.charAt(0));
-            int serverAbbreviationWidth = abbreviationMetrics.stringWidth(serverAbbreviation);
-
-            g2d.setColor(TEXT);
-            g2d.setBackground(TEXT);
-            g2d.drawString(serverAbbreviation, x + 50 - serverAbbreviationWidth / 2, y + 50 - abbreviationMetrics.getHeight() / 2 + abbreviationMetrics.getAscent());
-        }
-        g2d.setClip(null);
-    }
-
-
     private void drawMemberPosition(Graphics2D g2d, int y, Color color, Image avatar, int rank, long level, String name) {
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(10, y, 1125, 125);
@@ -306,7 +306,7 @@ public class ImageGenerator {
             });
         }
 
-            drawVCenteredText(g2d, STR."\{name != null ? STR."@\{name}" : "-"}", 317.5f, y + 62.5f);
+        drawVCenteredText(g2d, name != null ? "@" + name : "-", 317.5f, y + 62.5f);
 
         if (level < 0) {
             drawCenteredText(g2d, "-", 1073, y + 62.5f);

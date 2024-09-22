@@ -36,10 +36,10 @@ public class LeaderboardNextButton implements ButtonExecutor {
         hook.editOriginalAttachments(FileUpload.fromData(data, "image.png"))
                 .setContent("")
                 .setActionRow(
-                        Button.of(ButtonStyle.PRIMARY, STR."lb-previous;\{page}", "Précédent", Emoji.fromUnicode("⬅\uFE0F"))
+                        Button.of(ButtonStyle.PRIMARY, "lb-previous;" + page, "Précédent", Emoji.fromUnicode("⬅️"))
                                 .withDisabled(page == 1),
-                        Button.of(ButtonStyle.SUCCESS, "euuuuuuuh", STR."Page \{page}").asDisabled(),
-                        Button.of(ButtonStyle.PRIMARY, STR."lb-next;\{page}", "Suivant", Emoji.fromUnicode("➡\uFE0F"))
+                        Button.of(ButtonStyle.SUCCESS, "euuuuuuuh", "Page " + page).asDisabled(),
+                        Button.of(ButtonStyle.PRIMARY, "lb-next;" + page, "Suivant", Emoji.fromUnicode("➡️"))
                 )
                 .queue();
     }
