@@ -1,10 +1,15 @@
 package fr.redstom.gravenlevelling.utils;
 
-import static fr.redstom.gravenlevelling.utils.GravenColors.*;
-
 import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import jakarta.annotation.Nullable;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import org.springframework.stereotype.Service;
+
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -16,14 +21,11 @@ import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import javax.imageio.ImageIO;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import org.springframework.stereotype.Service;
+
+import static fr.redstom.gravenlevelling.utils.GravenColors.*;
 
 @Service
 @RequiredArgsConstructor
@@ -225,7 +227,16 @@ public class ImageGenerator {
         g2d.setColor(SECONDARY_BG);
         g2d.fillRect(0, 0, 1145, imageHeight);
 
-        drawServerIcon(g2d, dMembers.getFirst().getGuild(), 10 + 25 / 2, 10 + 25 / 2, PRIMARY_BG);
+        dMembers.stream()
+                .filter(Objects::nonNull)
+                .findFirst()
+                .ifPresent(first -> {
+                    try {
+                        drawServerIcon(g2d, first.getGuild(), 10 + 25 / 2, 10 + 25 / 2, PRIMARY_BG);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(135, 10, 1000, 125);
@@ -242,7 +253,7 @@ public class ImageGenerator {
         for (int i = 0; i < members.size(); i++) {
             Member discordMember = dMembers.get(i);
 
-            if(discordMember == null) {
+            if (discordMember == null) {
                 GravenMember gravenMember = members.get(i);
 
                 drawMemberPosition(g2d, 10 + (i + 1) * 135, Color.BLACK, null, (page - 1) * 10 + i + 1, gravenMember.level(), "Utilisateur introuvable");
