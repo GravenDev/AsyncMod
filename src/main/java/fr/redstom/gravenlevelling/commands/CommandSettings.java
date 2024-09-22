@@ -72,28 +72,28 @@ public class CommandSettings implements CommandExecutor {
                 .notificationChannelId(channel.getIdLong())
                 .notificationChannelType(channel.getType())
                 .build());
-        event.reply("Le salon de notification a été mis à jour").queue();
+        event.reply("✅ Le salon de notification a été mis à jour").queue();
     }
 
     private void setDmNotifications(SlashCommandInteractionEvent event) {
         boolean enabled = event.getOption("enabled").getAsBoolean();
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().dmNotifications(enabled).build());
-        event.reply("Les notifications par message privé ont été mises à jour").queue();
+        event.reply("✅ Les notifications par message privé ont été mises à jour").queue();
     }
 
     private void setLevelNotifications(SlashCommandInteractionEvent event) {
         boolean enabled = event.getOption("enabled").getAsBoolean();
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().levelNotificationEnabled(enabled).build());
-        event.reply("Les notifications de montée de niveau ont été mises à jour").queue();
+        event.reply("✅ Les notifications de montée de niveau ont été mises à jour").queue();
     }
 
     private void setRewardNotifications(SlashCommandInteractionEvent event) {
         boolean enabled = event.getOption("enabled").getAsBoolean();
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().rewardNotificationEnabled(enabled).build());
-        event.reply("Les notifications de récompense ont été mises à jour").queue();
+        event.reply("✅ Les notifications de récompense ont été mises à jour").queue();
     }
 
     private void setNotificationMessage(SlashCommandInteractionEvent event) {
@@ -132,7 +132,7 @@ public class CommandSettings implements CommandExecutor {
         String message = event.getValue("message").getAsString();
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().rewardNotificationMessage(message).build());
-        event.reply("Le message de notification de récompense a été mis à jour").queue();
+        event.reply("✅ Le message de notification de récompense a été mis à jour").queue();
     }
 
     @ModalHandler("set-notification-message")
@@ -140,6 +140,6 @@ public class CommandSettings implements CommandExecutor {
         String message = event.getValue("message").getAsString();
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().notificationMessage(message).build());
-        event.reply("Le message de notification a été mis à jour").queue();
+        event.reply("✅ Le message de notification a été mis à jour").queue();
     }
 }

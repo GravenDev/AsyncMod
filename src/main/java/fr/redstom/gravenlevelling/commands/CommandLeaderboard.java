@@ -3,6 +3,7 @@ package fr.redstom.gravenlevelling.commands;
 import fr.redstom.gravenlevelling.jpa.services.GravenGuildService;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
+import fr.redstom.gravenlevelling.utils.jda.EmbedUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -37,7 +38,9 @@ public class CommandLeaderboard implements CommandExecutor {
         byte[] data = guildService.getLeaderboardImageFor(event.getGuild(), page, event.getMember());
 
         if (data == null) {
-            hook.editOriginal(":x: Il n'existe pas pas de page n°**" + page + "** !").queue();
+            hook.editOriginal("")
+                    .setEmbeds(EmbedUtils.error("Il n'existe pas pas de page n°**" + page + "** !").build())
+                    .queue();
             return;
         }
 

@@ -5,6 +5,7 @@ import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import fr.redstom.gravenlevelling.utils.ImageGenerator;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
+import fr.redstom.gravenlevelling.utils.jda.EmbedUtils;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import javax.imageio.ImageIO;
@@ -36,6 +37,11 @@ public class CommandLevel implements CommandExecutor {
     @Override
     public void execute(SlashCommandInteractionEvent event) {
         Member discordMember = event.getOption("user", event.getMember(), OptionMapping::getAsMember);
+
+        if(discordMember == null) {
+            event.replyEmbeds(EmbedUtils.error("Impossible de trouver le membre spécifié").build()).queue();
+        }
+
         InteractionHook hook = event.deferReply().complete();
 
         GravenMember member = memberService.getMemberByDiscordMember(discordMember);

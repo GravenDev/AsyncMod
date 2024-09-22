@@ -8,6 +8,9 @@ import fr.redstom.gravenlevelling.jpa.repositories.GravenMemberRepository;
 import fr.redstom.gravenlevelling.utils.LevelUtils;
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
@@ -16,10 +19,6 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Lazy)
@@ -135,8 +134,7 @@ public class GravenMemberService {
         return memberRepository.findPositionOfMember(gMember.user(), gMember.guild());
     }
 
-    @Nullable
-    public Member getDiscordMemberByMember(GravenMember gravenMember) {
+    @Nullable public Member getDiscordMemberByMember(GravenMember gravenMember) {
         Guild guild = jda.getGuildById(gravenMember.guild().id());
         Member member = guild.getMemberById(gravenMember.user().id());
 
