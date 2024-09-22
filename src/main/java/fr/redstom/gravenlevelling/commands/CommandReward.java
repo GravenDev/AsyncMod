@@ -1,11 +1,15 @@
 package fr.redstom.gravenlevelling.commands;
 
+import static fr.redstom.gravenlevelling.buttons.DeleteButton.DELETE_BUTTON;
+
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuildReward;
 import fr.redstom.gravenlevelling.jpa.services.GravenGuildRewardService;
 import fr.redstom.gravenlevelling.utils.GravenColors;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.jda.EmbedUtils;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
@@ -18,11 +22,6 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.dao.DataIntegrityViolationException;
-
-import java.util.List;
-import java.util.Optional;
-
-import static fr.redstom.gravenlevelling.buttons.DeleteButton.DELETE_BUTTON;
 
 @Command
 @RequiredArgsConstructor

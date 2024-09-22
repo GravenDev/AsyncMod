@@ -37,7 +37,9 @@ public class CommandSettings implements CommandExecutor {
                                 .addOption(OptionType.BOOLEAN, "enabled", "Active ou désactive les notifications de récompense", true),
                         new SubcommandData("set-notification-message", "Définit le message de notification de montée de niveau"),
                         new SubcommandData("set-reward-notification-message", "Définit le message de notification de récompense"),
-                        new SubcommandData("get-placeholders", "Renvoie la liste des placeholders utilisables dans les messages de notification")
+                        new SubcommandData("get-placeholders", "Renvoie la liste des placeholders utilisables dans les messages de notification"),
+                        new SubcommandData("pause", "Met en pause le bot")
+                                .addOption(OptionType.BOOLEAN, "pause", "Met en pause ou enlève la pause du bot", true)
                 )
                 .setDefaultPermissions(DefaultMemberPermissions.DISABLED);
     }
@@ -52,7 +54,15 @@ public class CommandSettings implements CommandExecutor {
             case "set-notification-message" -> setNotificationMessage(event);
             case "set-reward-notification-message" -> setRewardNotificationMessage(event);
             case "get-placeholders" -> sendPlaceholders(event);
+            case "pause" -> pause(event);
         }
+    }
+
+    private void pause(SlashCommandInteractionEvent event) {
+        boolean pause = event.getOption("pause").getAsBoolean();
+
+        settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().pause(pause).build());
+        event.reply("Le bot a été "  + (pause ? "mis en pause" : "réactivé")).queue();
     }
 
     private void setNotificationChannel(SlashCommandInteractionEvent event) {

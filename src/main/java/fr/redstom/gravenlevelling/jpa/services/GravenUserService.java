@@ -21,4 +21,13 @@ public class GravenUserService {
                                 .build()));
     }
 
+    public GravenUser getOrCreateByUserId(long userId) {
+        return userRepository
+                .findById(userId)
+                .orElseGet(() -> userRepository.save(
+                        GravenUser.builder()
+                                .id(userId)
+                                .build()));
+    }
+
 }

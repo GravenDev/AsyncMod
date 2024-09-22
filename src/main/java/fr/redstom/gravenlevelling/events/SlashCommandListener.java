@@ -1,13 +1,12 @@
 package fr.redstom.gravenlevelling.events;
 
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

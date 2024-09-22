@@ -69,6 +69,11 @@ public class GravenGuildRewardService {
         member.getGuild().addRoleToMember(member, role).queue();
     }
 
+    public Optional<GravenGuildReward> getByMemberRole(Member member, Role role) {
+        GravenGuild gGuild = guildService.getOrCreateByDiscordGuild(member.getGuild());
+        return guildRewardRepository.findByGuildAndRoleId(gGuild, role.getIdLong());
+    }
+
     public void delete(GravenGuildReward reward) {
         guildRewardRepository.delete(reward);
     }

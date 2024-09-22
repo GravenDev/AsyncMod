@@ -1,15 +1,10 @@
 package fr.redstom.gravenlevelling.utils;
 
+import static fr.redstom.gravenlevelling.utils.GravenColors.*;
+
 import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import jakarta.annotation.Nullable;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Member;
-import org.springframework.stereotype.Service;
-
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -23,8 +18,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.function.Function;
-
-import static fr.redstom.gravenlevelling.utils.GravenColors.*;
+import javax.imageio.ImageIO;
+import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -242,6 +241,12 @@ public class ImageGenerator {
         g2d.setFont(OUTFIT.deriveFont(44f));
         for (int i = 0; i < members.size(); i++) {
             Member discordMember = dMembers.get(i);
+
+            if(discordMember == null) {
+                drawMemberPosition(g2d, 10 + (i + 1) * 135, Color.BLACK, null, -1, -1, null);
+                continue;
+            }
+
             GravenMember gravenMember = members.get(i);
 
             Image avatar = ImageIO.read(discordMember.getEffectiveAvatar().download().join());

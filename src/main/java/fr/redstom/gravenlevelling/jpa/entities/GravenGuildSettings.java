@@ -38,6 +38,9 @@ public class GravenGuildSettings {
     private boolean autoLevelGrant = true;
 
     @Builder.Default
+    private boolean pause = true;
+
+    @Builder.Default
     private String notificationMessage = "Bravo %user.mention%, tu as atteint le niveau %level% !";
     @Builder.Default
     private String rewardNotificationMessage = """
