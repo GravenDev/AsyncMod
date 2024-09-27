@@ -30,7 +30,7 @@ public interface GravenMemberRepository extends CrudRepository<GravenMember, Gra
                 SELECT memberRank.rank
                 FROM (
                     SELECT gm.user as user,
-                           DENSE_RANK() OVER (ORDER BY gm.level DESC, gm.experience DESC) AS rank
+                           RANK() OVER (ORDER BY gm.level DESC, gm.experience DESC) AS rank
                     FROM GravenMember gm
                     WHERE gm.guild = :guild
                 ) memberRank
