@@ -30,7 +30,7 @@ public interface GravenMemberRepository extends CrudRepository<GravenMember, Gra
                 SELECT memberRank.rank
                 FROM (
                     SELECT gm.user as user,
-                           ROW_NUMBER() OVER (ORDER BY gm.level DESC, gm.experience DESC) AS rank
+                           ROW_NUMBER() OVER (ORDER BY gm.level DESC, gm.experience DESC, gm.user.id ASC) AS rank
                     FROM GravenMember gm
                     WHERE gm.guild = :guild
            			AND NOT (gm.level = 0 AND gm.experience = 0)
@@ -47,7 +47,8 @@ public interface GravenMemberRepository extends CrudRepository<GravenMember, Gra
                 AND NOT (g.level = 0 AND g.experience = 0)
             ORDER BY
                 g.level DESC,
-                g.experience DESC
+                g.experience DESC,
+                g.user.id ASC
             """)
     Page<GravenMember> findAllByGuild(GravenGuild guild, Pageable config);
 }
