@@ -75,6 +75,7 @@ public class ImageGenerator {
             BufferedImage serverLogoAsImage = ImageIO.read(serverLogo);
 
             g2d.drawImage(serverLogoAsImage, x, y, 100, 100, null);
+            serverLogo.close();
         } else {
             g2d.setFont(OUTFIT.deriveFont(24f));
             FontMetrics abbreviationMetrics = g2d.getFontMetrics();
@@ -196,6 +197,8 @@ public class ImageGenerator {
 
         g2d.setFont(titleFont);
         g2d.drawString("Rang :", podiumTextX, 177 + 36);
+
+        avatar.close();
 
         return image;
     }
