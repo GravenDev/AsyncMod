@@ -19,7 +19,13 @@ public class LevelUtils {
     private int maxMessageLength = 100;
 
     public long xpForNextLevelAt(long level) {
-        return Math.round(5 * Math.pow(level, 2) + (50 * level) + 100);
+        double exp = 5 * Math.pow(level, 2) + (50 * level) + 100;
+
+        if (level >= 10) {
+            return Math.round((exp * 7.5) / level);
+        } else {
+            return Math.round(exp);
+        }
     }
 
     public long flattenMessageLengthIntoGain(double messageLength) {
