@@ -20,12 +20,12 @@ public class LevelUtils {
 
     public long xpForNextLevelAt(long level) {
         double exp = 5 * Math.pow(level, 2) + (50 * level) + 100;
+        double exp2 = Math.round((exp * 20) / level);
 
-        if (level >= 10) {
-            return Math.round((exp * 10) / level);
-        } else {
-            return Math.round(exp);
-        }
+        return Math.min(
+                Math.round(exp),
+                Math.round(exp2)
+        );
     }
 
     public long flattenMessageLengthIntoGain(double messageLength) {
