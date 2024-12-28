@@ -20,7 +20,7 @@ public class LevelUtils {
 
     public long xpForNextLevelAt(long level) {
         double exp = 5 * Math.pow(level, 2) + (50 * level) + 100;
-        double exp2 = Math.round((exp * 20) / level);
+        double exp2 = (exp * 20) / level;
 
         return Math.min(
                 Math.round(exp),
