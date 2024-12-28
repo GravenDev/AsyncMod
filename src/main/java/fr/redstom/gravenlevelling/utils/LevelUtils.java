@@ -22,7 +22,7 @@ public class LevelUtils {
         double exp = 5 * Math.pow(level, 2) + (50 * level) + 100;
 
         if (level >= 10) {
-            return Math.round((exp * 7.5) / level);
+            return Math.round((exp * 3) / level);
         } else {
             return Math.round(exp);
         }
