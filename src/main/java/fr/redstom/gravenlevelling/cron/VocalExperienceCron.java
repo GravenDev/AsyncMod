@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,9 @@ public class VocalExperienceCron {
     private final GravenMemberService memberService;
     private final JDA bot;
 
+    @Value("${xp.per_30sec}")
+    private int per30sec = 1;
+
     @Scheduled(cron = "*/30 * * * * *")
     public void compute() {
         for (Guild guild : bot.getGuilds()) {
@@ -23,7 +27,7 @@ public class VocalExperienceCron {
                         .filter(user -> user.getVoiceState() != null)
                         .filter(user -> !user.getVoiceState().isDeafened())
                         .filter(user -> !user.getVoiceState().isMuted())
-                        .forEach(member -> memberService.addXp(member, 1));
+                        .forEach(member -> memberService.addXp(member, per30sec));
             }
 
         }
