@@ -3,11 +3,11 @@ package fr.redstom.gravenlevelling.utils;
 public class NumberUtils {
     static String formatNumber(long number) {
         if (number >= 1_000_000_000) {
-            return String.format("%.1fB", number / 1_000_000_000.0);
+            return String.format("%.1fB", number / 1_000_000_000d);
         } else if (number >= 1_000_000) {
-            return String.format("%.1fM", number / 1_000_000.0);
-        } else if (number >= 500) {
-            return String.format("%.1fk", number / 1_000.0);
+            return String.format("%.1fM", number / 1_000_000d);
+        } else if (number >= 1000) {
+            return String.format("%.1fk", number / 1_000d);
         } else {
             return String.valueOf(number);
         }

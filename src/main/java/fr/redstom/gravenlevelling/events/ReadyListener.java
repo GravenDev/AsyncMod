@@ -1,9 +1,11 @@
 package fr.redstom.gravenlevelling.events;
 
 import lombok.extern.slf4j.Slf4j;
+
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
 import org.springframework.stereotype.Service;
 
 @Service

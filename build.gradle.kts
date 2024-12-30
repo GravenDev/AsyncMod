@@ -35,23 +35,19 @@ dependencies {
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
 
-     implementation("net.dv8tion:JDA:5.0.2")
+    implementation("net.dv8tion:JDA:5.0.2")
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.withType<JavaCompile> {
-    options.compilerArgs.add("--enable-preview")
-}
-
 spotless {
     java {
-        importOrder()
-        removeUnusedImports()
-        formatAnnotations()
-        trimTrailingWhitespace()
-        toggleOffOn()
+        googleJavaFormat()
+            .reorderImports(true)
+            .formatJavadoc(true)
+            .reflowLongStrings()
+            .aosp()
     }
 }

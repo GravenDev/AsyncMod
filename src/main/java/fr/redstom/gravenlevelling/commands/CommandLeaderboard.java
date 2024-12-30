@@ -4,8 +4,10 @@ import fr.redstom.gravenlevelling.jpa.services.GravenGuildService;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.jda.EmbedUtils;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -37,22 +39,32 @@ public class CommandLeaderboard implements CommandExecutor {
         int page = Math.abs(event.getOption("page", 1, OptionMapping::getAsInt));
         InteractionHook hook = event.deferReply(false).complete();
 
-        byte[] data = guildService.getLeaderboardImageFor(event.getGuild(), page, event.getMember());
+        byte[] data =
+                guildService.getLeaderboardImageFor(event.getGuild(), page, event.getMember());
 
         if (data == null) {
             hook.editOriginal("")
-                    .setEmbeds(EmbedUtils.error("Il n'existe pas pas de page n°**" + page + "** !").build())
+                    .setEmbeds(
+                            EmbedUtils.error("Il n'existe pas pas de page n°**" + page + "** !")
+                                    .build())
                     .queue();
             return;
         }
 
         hook.editOriginalAttachments(FileUpload.fromData(data, "image.png"))
                 .setActionRow(
-                        Button.of(ButtonStyle.PRIMARY, "lb-previous;" + page, "Précédent", Emoji.fromUnicode("⬅️"))
+                        Button.of(
+                                        ButtonStyle.PRIMARY,
+                                        "lb-previous;" + page,
+                                        "Précédent",
+                                        Emoji.fromUnicode("⬅️"))
                                 .withDisabled(page == 1),
                         Button.of(ButtonStyle.SUCCESS, "euuuuuuuh", "Page " + page).asDisabled(),
-                        Button.of(ButtonStyle.PRIMARY, "lb-next;" + page, "Suivant", Emoji.fromUnicode("➡️"))
-                )
+                        Button.of(
+                                ButtonStyle.PRIMARY,
+                                "lb-next;" + page,
+                                "Suivant",
+                                Emoji.fromUnicode("➡️")))
                 .queue();
     }
 }

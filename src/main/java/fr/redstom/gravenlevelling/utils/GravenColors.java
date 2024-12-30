@@ -24,5 +24,4 @@ public interface GravenColors {
 
     Color TEXT = new Color(0xEEEEEE);
     Color TEXT_ACCENT = new Color(0x898887);
-
 }

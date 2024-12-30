@@ -1,6 +1,7 @@
 package fr.redstom.gravenlevelling.utils.jda;
 
 import fr.redstom.gravenlevelling.utils.GravenColors;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 
 public class EmbedUtils {
@@ -11,5 +12,4 @@ public class EmbedUtils {
                 .setDescription(description)
                 .setColor(GravenColors.RED);
     }
-
 }

@@ -5,8 +5,10 @@ import fr.redstom.gravenlevelling.jpa.repositories.GravenMemberRepository;
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -35,8 +37,7 @@ public class CommandLevels implements CommandExecutor {
                                 .addOption(OptionType.INTEGER, "lvl", "Niveaux à retirer", true),
                         new SubcommandData("set", "Définit le niveau d'un membre")
                                 .addOption(OptionType.USER, "user", "Utilisateur", true)
-                                .addOption(OptionType.INTEGER, "lvl", "Niveau à définir", true)
-                )
+                                .addOption(OptionType.INTEGER, "lvl", "Niveau à définir", true))
                 .setDefaultPermissions(DefaultMemberPermissions.DISABLED);
     }
 
@@ -61,11 +62,19 @@ public class CommandLevels implements CommandExecutor {
 
         memberRepository.save(gMember);
 
-        event.reply(STR."✅ L'utilisateur \{member.getAsMention()} est maintenant au niveau **\{gMember.level()}**").queue();
-        log.info("{} changed level of {} from {} to {} in guild {}",
+        event.reply(
+                        "✅ L'utilisateur "
+                                + member.getAsMention()
+                                + " est maintenant au niveau **"
+                                + gMember.level()
+                                + "**")
+                .queue();
+        log.info(
+                "{} changed level of {} from {} to {} in guild {}",
                 event.getMember().getUser().getAsTag(),
                 member.getUser().getAsTag(),
-                oldLevel, oldLevel + lvl,
+                oldLevel,
+                oldLevel + lvl,
                 event.getGuild().getName());
     }
 
@@ -81,11 +90,19 @@ public class CommandLevels implements CommandExecutor {
 
         memberRepository.save(gMember);
 
-        event.reply(STR."✅ L'utilisateur \{member.getAsMention()} est maintenant au niveau **\{gMember.level()}**").queue();
-        log.info("{} changed level of {} from {} to {} in guild {}",
+        event.reply(
+                        "✅ L'utilisateur "
+                                + member.getAsMention()
+                                + " est maintenant au niveau **"
+                                + gMember.level()
+                                + "**")
+                .queue();
+        log.info(
+                "{} changed level of {} from {} to {} in guild {}",
                 event.getMember().getUser().getAsTag(),
                 member.getUser().getAsTag(),
-                oldLevel, oldLevel - lvl,
+                oldLevel,
+                oldLevel - lvl,
                 event.getGuild().getName());
     }
 
@@ -101,11 +118,19 @@ public class CommandLevels implements CommandExecutor {
 
         memberRepository.save(gMember);
 
-        event.reply(STR."✅ L'utilisateur \{member.getAsMention()} est maintenant au niveau **\{gMember.level()}**").queue();
-        log.info("{} changed level of {} from {} to {} in guild {}",
+        event.reply(
+                        "✅ L'utilisateur "
+                                + member.getAsMention()
+                                + " est maintenant au niveau **"
+                                + gMember.level()
+                                + "**")
+                .queue();
+        log.info(
+                "{} changed level of {} from {} to {} in guild {}",
                 event.getMember().getUser().getAsTag(),
                 member.getUser().getAsTag(),
-                oldLevel, lvl,
+                oldLevel,
+                lvl,
                 event.getGuild().getName());
     }
 }

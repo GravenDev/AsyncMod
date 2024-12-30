@@ -22,28 +22,27 @@ public class LevelUtils {
         double exp = 5 * Math.pow(level, 2) + (50 * level) + 100;
         double exp2 = (exp * 20) / level;
 
-        return Math.min(
-                Math.round(exp),
-                Math.round(exp2)
-        );
+        return Math.min(Math.round(exp), Math.round(exp2));
     }
 
     public long flattenMessageLengthIntoGain(double messageLength) {
-        if(messageLength < minMessageLength) {
+        if (messageLength < minMessageLength) {
             return minPerMessage;
         }
         if (messageLength > maxMessageLength) {
             return maxPerMessage;
         }
 
-        return Math.round(minPerMessage + ((messageLength - minMessageLength) * (maxPerMessage - minPerMessage) / (maxMessageLength - minMessageLength)));
+        return Math.round(
+                minPerMessage
+                        + ((messageLength - minMessageLength)
+                                * (maxPerMessage - minPerMessage)
+                                / (maxMessageLength - minMessageLength)));
     }
 
     public String formatExperience(long xp, long level) {
         long totalXp = xpForNextLevelAt(level);
 
-        return STR."\{NumberUtils.formatNumber(xp)}/\{NumberUtils.formatNumber(totalXp)}";
+        return NumberUtils.formatNumber(xp) + "/" + NumberUtils.formatNumber(totalXp);
     }
-
-
 }

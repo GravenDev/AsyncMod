@@ -1,15 +1,20 @@
 package fr.redstom.gravenlevelling.utils;
 
+import static fr.redstom.gravenlevelling.utils.GravenColors.*;
+
 import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
+
 import jakarta.annotation.Nullable;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+
 import org.springframework.stereotype.Service;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
@@ -25,13 +30,14 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import static fr.redstom.gravenlevelling.utils.GravenColors.*;
+import javax.imageio.ImageIO;
 
 @Service
 @RequiredArgsConstructor
 public class ImageGenerator {
 
-    public static final DecimalFormat RANK_FORMATTER = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+    public static final DecimalFormat RANK_FORMATTER =
+            (DecimalFormat) NumberFormat.getInstance(Locale.US);
 
     public static final Font OUTFIT;
 
@@ -48,14 +54,43 @@ public class ImageGenerator {
         RANK_FORMATTER.setDecimalFormatSymbols(decimalFormatSymbols);
 
         try {
-            OUTFIT = Font.createFont(Font.TRUETYPE_FONT, ImageGenerator.class.getClassLoader().getResourceAsStream("fonts/outfit.ttf"));
+            OUTFIT =
+                    Font.createFont(
+                            Font.TRUETYPE_FONT,
+                            ImageGenerator.class
+                                    .getClassLoader()
+                                    .getResourceAsStream("fonts/outfit.ttf"));
 
-            PODIUM = ImageIO.read(ImageGenerator.class.getClassLoader().getResourceAsStream("images/podium.png"));
-            PODIUM_BRONZE = ImageIO.read(ImageGenerator.class.getClassLoader().getResourceAsStream("images/podium-bronze.png"));
-            PODIUM_SILVER = ImageIO.read(ImageGenerator.class.getClassLoader().getResourceAsStream("images/podium-silver.png"));
-            PODIUM_GOLD = ImageIO.read(ImageGenerator.class.getClassLoader().getResourceAsStream("images/podium-gold.png"));
-            STAR = ImageIO.read(ImageGenerator.class.getClassLoader().getResourceAsStream("images/star.png"));
-            TROPHEE = ImageIO.read(ImageGenerator.class.getClassLoader().getResourceAsStream("images/trophee.png"));
+            PODIUM =
+                    ImageIO.read(
+                            ImageGenerator.class
+                                    .getClassLoader()
+                                    .getResourceAsStream("images/podium.png"));
+            PODIUM_BRONZE =
+                    ImageIO.read(
+                            ImageGenerator.class
+                                    .getClassLoader()
+                                    .getResourceAsStream("images/podium-bronze.png"));
+            PODIUM_SILVER =
+                    ImageIO.read(
+                            ImageGenerator.class
+                                    .getClassLoader()
+                                    .getResourceAsStream("images/podium-silver.png"));
+            PODIUM_GOLD =
+                    ImageIO.read(
+                            ImageGenerator.class
+                                    .getClassLoader()
+                                    .getResourceAsStream("images/podium-gold.png"));
+            STAR =
+                    ImageIO.read(
+                            ImageGenerator.class
+                                    .getClassLoader()
+                                    .getResourceAsStream("images/star.png"));
+            TROPHEE =
+                    ImageIO.read(
+                            ImageGenerator.class
+                                    .getClassLoader()
+                                    .getResourceAsStream("images/trophee.png"));
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +99,8 @@ public class ImageGenerator {
     private final LevelUtils levelUtils;
     private final GravenMemberService memberService;
 
-    private static void drawServerIcon(Graphics2D g2d, Guild guild, int x, int y, Color defaultBg) throws IOException {
+    private static void drawServerIcon(Graphics2D g2d, Guild guild, int x, int y, Color defaultBg)
+            throws IOException {
         g2d.setClip(new Ellipse2D.Double(x, y, 100, 100));
 
         g2d.setColor(defaultBg);
@@ -79,12 +115,16 @@ public class ImageGenerator {
         } else {
             g2d.setFont(OUTFIT.deriveFont(24f));
             FontMetrics abbreviationMetrics = g2d.getFontMetrics();
-            String serverAbbreviation = Arrays.stream(guild.getName().split(" ")).reduce("", (a, b) -> a + b.charAt(0));
+            String serverAbbreviation =
+                    Arrays.stream(guild.getName().split(" ")).reduce("", (a, b) -> a + b.charAt(0));
             int serverAbbreviationWidth = abbreviationMetrics.stringWidth(serverAbbreviation);
 
             g2d.setColor(TEXT);
             g2d.setBackground(TEXT);
-            g2d.drawString(serverAbbreviation, x + 50 - serverAbbreviationWidth / 2, y + 50 - abbreviationMetrics.getHeight() / 2 + abbreviationMetrics.getAscent());
+            g2d.drawString(
+                    serverAbbreviation,
+                    x + 50 - serverAbbreviationWidth / 2,
+                    y + 50 - abbreviationMetrics.getHeight() / 2 + abbreviationMetrics.getAscent());
         }
         g2d.setClip(null);
     }
@@ -97,15 +137,19 @@ public class ImageGenerator {
 
         BufferedImage image = new BufferedImage(1600, 400, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_ALPHA_INTERPOLATION,
+                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-
 
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(0, 0, 1600, 400);
@@ -122,7 +166,9 @@ public class ImageGenerator {
         g2d.setBackground(SECONDARY_BG);
         g2d.fillRect(0, 350, 1600, 50);
 
-        double advancement = (double) gMember.experience() / (double) levelUtils.xpForNextLevelAt(gMember.level());
+        double advancement =
+                (double) gMember.experience()
+                        / (double) levelUtils.xpForNextLevelAt(gMember.level());
         g2d.setColor(accent);
         g2d.setBackground(accent);
         g2d.fillRect(0, 350, (int) (advancement * 1600), 50);
@@ -156,7 +202,10 @@ public class ImageGenerator {
         g2d.drawImage(STAR, startingWidth, 177, imageSize, imageSize, null);
         String levelContent = String.valueOf(gMember.level());
         String levelTitle = "Niveau :";
-        int levelWidth = Math.max(contentMetrics.stringWidth(levelContent), titleMetrics.stringWidth(levelTitle));
+        int levelWidth =
+                Math.max(
+                        contentMetrics.stringWidth(levelContent),
+                        titleMetrics.stringWidth(levelTitle));
 
         int levelTextX = startingWidth + imageSize + margin;
         g2d.setFont(contentFont);
@@ -165,10 +214,20 @@ public class ImageGenerator {
         g2d.setFont(titleFont);
         g2d.drawString(levelTitle, levelTextX, 177 + 36);
 
-        g2d.drawImage(TROPHEE, startingWidth + levelWidth + imageSize + margin * 3, 177, imageSize, imageSize, null);
-        String experienceContent = levelUtils.formatExperience(gMember.experience(), gMember.level());
+        g2d.drawImage(
+                TROPHEE,
+                startingWidth + levelWidth + imageSize + margin * 3,
+                177,
+                imageSize,
+                imageSize,
+                null);
+        String experienceContent =
+                levelUtils.formatExperience(gMember.experience(), gMember.level());
         String experienceTitle = "Expérience :";
-        int experienceWidth = Math.max(contentMetrics.stringWidth(experienceContent), titleMetrics.stringWidth(experienceTitle));
+        int experienceWidth =
+                Math.max(
+                        contentMetrics.stringWidth(experienceContent),
+                        titleMetrics.stringWidth(experienceTitle));
 
         int experienceTextX = startingWidth + levelWidth + imageSize * 2 + margin * 4;
         g2d.setFont(contentFont);
@@ -184,12 +243,18 @@ public class ImageGenerator {
             rankText = "-";
         }
 
-        g2d.drawImage(switch (rank) {
-            case 1 -> PODIUM_GOLD;
-            case 2 -> PODIUM_SILVER;
-            case 3 -> PODIUM_BRONZE;
-            default -> PODIUM;
-        }, startingWidth + levelWidth + experienceWidth + imageSize * 2 + margin * 6, 177, imageSize, imageSize, null);
+        g2d.drawImage(
+                switch (rank) {
+                    case 1 -> PODIUM_GOLD;
+                    case 2 -> PODIUM_SILVER;
+                    case 3 -> PODIUM_BRONZE;
+                    default -> PODIUM;
+                },
+                startingWidth + levelWidth + experienceWidth + imageSize * 2 + margin * 6,
+                177,
+                imageSize,
+                imageSize,
+                null);
 
         int podiumTextX = startingWidth + levelWidth + experienceWidth + imageSize * 3 + margin * 7;
         g2d.setFont(contentFont);
@@ -204,7 +269,11 @@ public class ImageGenerator {
     }
 
     @SneakyThrows
-    public BufferedImage generateLeaderboardImage(int page, @Nullable GravenMember user, List<GravenMember> members, Function<GravenMember, Member> memberMapper) {
+    public BufferedImage generateLeaderboardImage(
+            int page,
+            @Nullable GravenMember user,
+            List<GravenMember> members,
+            Function<GravenMember, Member> memberMapper) {
         List<Member> dMembers = members.stream().map(memberMapper).toList();
 
         GravenMember originalUser = user;
@@ -214,16 +283,25 @@ public class ImageGenerator {
             }
         }
 
-        int imageHeight = 155 + /*members.size()*/10 * 125 + (/*members.size() - 1*/9) * 10 + (originalUser != null ? 175 : 0);
+        int imageHeight =
+                155
+                        + /*members.size()*/ 10 * 125
+                        + (/*members.size() - 1*/ 9) * 10
+                        + (originalUser != null ? 175 : 0);
 
         BufferedImage image = new BufferedImage(1145, imageHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D g2d = image.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_ALPHA_INTERPOLATION,
+                RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
-        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
-        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(
+                RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
@@ -233,13 +311,19 @@ public class ImageGenerator {
         dMembers.stream()
                 .filter(Objects::nonNull)
                 .findFirst()
-                .ifPresent(first -> {
-                    try {
-                        drawServerIcon(g2d, first.getGuild(), 10 + 25 / 2, 10 + 25 / 2, PRIMARY_BG);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                .ifPresent(
+                        first -> {
+                            try {
+                                drawServerIcon(
+                                        g2d,
+                                        first.getGuild(),
+                                        10 + 25 / 2,
+                                        10 + 25 / 2,
+                                        PRIMARY_BG);
+                            } catch (IOException e) {
+                                throw new RuntimeException(e);
+                            }
+                        });
 
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(135, 10, 1000, 125);
@@ -259,7 +343,14 @@ public class ImageGenerator {
             if (discordMember == null) {
                 GravenMember gravenMember = members.get(i);
 
-                drawMemberPosition(g2d, 10 + (i + 1) * 135, Color.BLACK, null, (page - 1) * 10 + i + 1, gravenMember.level(), "Utilisateur introuvable");
+                drawMemberPosition(
+                        g2d,
+                        10 + (i + 1) * 135,
+                        Color.BLACK,
+                        null,
+                        (page - 1) * 10 + i + 1,
+                        gravenMember.level(),
+                        "Utilisateur introuvable");
                 continue;
             }
 
@@ -267,10 +358,24 @@ public class ImageGenerator {
 
             Image avatar = ImageIO.read(discordMember.getEffectiveAvatar().download().join());
 
-            drawMemberPosition(g2d, 10 + (i + 1) * 135, discordMember.getColor(), avatar, (page - 1) * 10 + i + 1, gravenMember.level(), discordMember.getUser().getName());
+            drawMemberPosition(
+                    g2d,
+                    10 + (i + 1) * 135,
+                    discordMember.getColor(),
+                    avatar,
+                    (page - 1) * 10 + i + 1,
+                    gravenMember.level(),
+                    discordMember.getUser().getName());
         }
         for (int i = 0; i < 10 - members.size(); i++) {
-            drawMemberPosition(g2d, members.size() * 135 + 10 + (i + 1) * 135, Color.BLACK, null, -1, -1, null);
+            drawMemberPosition(
+                    g2d,
+                    members.size() * 135 + 10 + (i + 1) * 135,
+                    Color.BLACK,
+                    null,
+                    -1,
+                    -1,
+                    null);
         }
 
         if (originalUser != null) {
@@ -285,8 +390,7 @@ public class ImageGenerator {
                     avatar,
                     memberService.getRank(discordMember),
                     originalUser.level(),
-                    discordMember.getUser().getName()
-            );
+                    discordMember.getUser().getName());
         }
 
         g2d.setColor(SECONDARY_BG);
@@ -300,11 +404,11 @@ public class ImageGenerator {
             g2d.fillRect(10, imageHeight - 165, 1125, 10);
         }
 
-
         return image;
     }
 
-    private void drawMemberPosition(Graphics2D g2d, int y, Color color, Image avatar, int rank, long level, String name) {
+    private void drawMemberPosition(
+            Graphics2D g2d, int y, Color color, Image avatar, int rank, long level, String name) {
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(10, y, 1125, 125);
 
@@ -315,16 +419,30 @@ public class ImageGenerator {
 
         g2d.setColor(TEXT);
         switch (rank) {
-            case 1, 2, 3 -> g2d.drawImage(switch (rank) {
-                case 1 -> PODIUM_GOLD;
-                case 2 -> PODIUM_SILVER;
-                case 3 -> PODIUM_BRONZE;
-                default -> throw new IllegalStateException("Unexpected value: " + rank);
-            }, 170, y + 25, 75, 75, null);
+            case 1, 2, 3 ->
+                    g2d.drawImage(
+                            switch (rank) {
+                                case 1 -> PODIUM_GOLD;
+                                case 2 -> PODIUM_SILVER;
+                                case 3 -> PODIUM_BRONZE;
+                                default ->
+                                        throw new IllegalStateException(
+                                                "Unexpected value: " + rank);
+                            },
+                            170,
+                            y + 25,
+                            75,
+                            75,
+                            null);
             case -1 -> drawCenteredText(g2d, "-", 207.5f, y + 62.5f);
-            default -> withComputedFontSize(g2d, NumberUtils.formatNumber(rank), 100, (text) -> {
-                drawCenteredText(g2d, text, 207.5f, y + 62.5f);
-            });
+            default ->
+                    withComputedFontSize(
+                            g2d,
+                            NumberUtils.formatNumber(rank),
+                            100,
+                            (text) -> {
+                                drawCenteredText(g2d, text, 207.5f, y + 62.5f);
+                            });
         }
 
         drawVCenteredText(g2d, name != null ? "@" + name : "-", 317.5f, y + 62.5f);
@@ -332,15 +450,22 @@ public class ImageGenerator {
         if (level < 0) {
             drawCenteredText(g2d, "-", 1073, y + 62.5f);
         } else {
-            withComputedFontSize(g2d, NumberUtils.formatNumber(level), 100, (text) -> {
-                drawCenteredText(g2d, text, 1073, y + 62.5f);
-            });
+            withComputedFontSize(
+                    g2d,
+                    NumberUtils.formatNumber(level),
+                    100,
+                    (text) -> {
+                        drawCenteredText(g2d, text, 1073, y + 62.5f);
+                    });
         }
     }
 
     private void drawCenteredText(Graphics2D g2d, String text, float x, float y) {
         FontMetrics metrics = g2d.getFontMetrics();
-        g2d.drawString(text, x - metrics.stringWidth(text) / 2f, y - metrics.getHeight() / 2f + metrics.getAscent());
+        g2d.drawString(
+                text,
+                x - metrics.stringWidth(text) / 2f,
+                y - metrics.getHeight() / 2f + metrics.getAscent());
     }
 
     private void drawVCenteredText(Graphics2D g2d, String text, float x, float y) {
@@ -348,7 +473,8 @@ public class ImageGenerator {
         g2d.drawString(text, x, y - metrics.getHeight() / 2f + metrics.getAscent());
     }
 
-    private void withComputedFontSize(Graphics2D g2d, String text, int targetMaxWidth, Consumer<String> action) {
+    private void withComputedFontSize(
+            Graphics2D g2d, String text, int targetMaxWidth, Consumer<String> action) {
         Font original = g2d.getFont();
         Font font = original;
 

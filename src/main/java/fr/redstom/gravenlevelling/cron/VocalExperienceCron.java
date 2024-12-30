@@ -1,11 +1,14 @@
 package fr.redstom.gravenlevelling.cron;
 
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -41,5 +44,4 @@ public class VocalExperienceCron {
 
         log.info("Xp experience cron complete and {} users updated", counter.get());
     }
-
 }

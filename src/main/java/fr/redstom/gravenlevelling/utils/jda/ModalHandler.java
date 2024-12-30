@@ -7,9 +7,6 @@ import java.lang.annotation.*;
 @Documented
 public @interface ModalHandler {
 
-    /**
-     * The id of the modal to handle
-     */
+    /** The id of the modal to handle */
     String value();
-
 }

@@ -5,19 +5,25 @@ import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
 import fr.redstom.gravenlevelling.jpa.repositories.GravenGuildRepository;
 import fr.redstom.gravenlevelling.jpa.repositories.GravenMemberRepository;
 import fr.redstom.gravenlevelling.utils.ImageGenerator;
+
 import jakarta.annotation.Nullable;
 import jakarta.transaction.Transactional;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
-import javax.imageio.ImageIO;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
+
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+
+import javax.imageio.ImageIO;
 
 @Service
 @RequiredArgsConstructor(onConstructor_ = @__(@Lazy))
@@ -33,10 +39,10 @@ public class GravenGuildService {
     public GravenGuild getOrCreateByDiscordGuild(Guild guild) {
         return guildRepository
                 .findById(guild.getIdLong())
-                .orElseGet(() -> guildRepository.save(
-                        GravenGuild.builder()
-                                .id(guild.getIdLong())
-                                .build()));
+                .orElseGet(
+                        () ->
+                                guildRepository.save(
+                                        GravenGuild.builder().id(guild.getIdLong()).build()));
     }
 
     @Transactional
@@ -54,8 +60,14 @@ public class GravenGuildService {
             return null;
         }
 
-        GravenMember gMember = member == null ? null : memberService.getMemberByDiscordMember(member);
-        BufferedImage image = imageGenerator.generateLeaderboardImage(page, gMember, members.getContent(), memberService::getDiscordMemberByMember);
+        GravenMember gMember =
+                member == null ? null : memberService.getMemberByDiscordMember(member);
+        BufferedImage image =
+                imageGenerator.generateLeaderboardImage(
+                        page,
+                        gMember,
+                        members.getContent(),
+                        memberService::getDiscordMemberByMember);
 
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         ImageIO.write(image, "png", stream);

@@ -2,6 +2,7 @@ package fr.redstom.gravenlevelling.commands;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import fr.redstom.gravenlevelling.jpa.services.GravenGuildSettingsService;
 import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import fr.redstom.gravenlevelling.utils.imports.ImportEntry;
@@ -9,13 +10,10 @@ import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.jda.EmbedUtils;
 
-import java.io.InputStream;
-import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
+
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -26,9 +24,11 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
+import java.io.InputStream;
+import java.util.List;
+
 @Command
 @RequiredArgsConstructor
-
 @Slf4j
 public class CommandImport implements CommandExecutor {
 
@@ -41,10 +41,22 @@ public class CommandImport implements CommandExecutor {
         return Commands.slash("import", "Importer des niveaux depuis des données existantes")
                 .addSubcommands(
                         new SubcommandData("json", "Importer des niveaux depuis un fichier JSON")
-                                .addOption(OptionType.ATTACHMENT, "file", "Fichier JSON à importer dans le format [{ id: long, level: long }]", true),
-                        new SubcommandData("roles", "Active ou désactive l'importation depuis des rôles Discord")
-                                .addOption(OptionType.BOOLEAN, "enable", "Activer ou désactiver l'importation depuis des rôles Discord", true)
-                )
+                                .addOption(
+                                        OptionType.ATTACHMENT,
+                                        "file",
+                                        "Fichier JSON à importer dans le format [{ id: long, level:"
+                                                + " long }]",
+                                        true),
+                        new SubcommandData(
+                                        "roles",
+                                        "Active ou désactive l'importation depuis des rôles"
+                                                + " Discord")
+                                .addOption(
+                                        OptionType.BOOLEAN,
+                                        "enable",
+                                        "Activer ou désactiver l'importation depuis des rôles"
+                                                + " Discord",
+                                        true))
                 .setDefaultPermissions(DefaultMemberPermissions.DISABLED);
     }
 
@@ -60,26 +72,33 @@ public class CommandImport implements CommandExecutor {
         Message.Attachment file = event.getOption("file").getAsAttachment();
 
         if (!"json".equals(file.getFileExtension())) {
-            event.replyEmbeds(EmbedUtils.error("Le fichier doit être au format JSON !").build()).queue();
+            event.replyEmbeds(EmbedUtils.error("Le fichier doit être au format JSON !").build())
+                    .queue();
             return;
         }
 
         InteractionHook hook = event.deferReply().complete();
         file.getProxy().download().thenAccept(stream -> this.decode(event, hook, stream));
 
-        log.info("{} imported a json file for guild \"{}\"",
-                event.getMember().getUser().getAsTag(), event.getGuild().getName());
+        log.info(
+                "{} imported a json file for guild \"{}\"",
+                event.getMember().getUser().getAsTag(),
+                event.getGuild().getName());
     }
 
     @SneakyThrows
-    private void decode(SlashCommandInteractionEvent event, InteractionHook hook, InputStream stream) {
+    private void decode(
+            SlashCommandInteractionEvent event, InteractionHook hook, InputStream stream) {
         List<ImportEntry> model;
         try {
-            model = mapper.readValue(stream, new TypeReference<>() {
-            });
+            model = mapper.readValue(stream, new TypeReference<>() {});
         } catch (Exception e) {
             hook.editOriginal("")
-                    .setEmbeds(EmbedUtils.error("Erreur lors de la lecture du fichier : " + e.getMessage()).build())
+                    .setEmbeds(
+                            EmbedUtils.error(
+                                            "Erreur lors de la lecture du fichier : "
+                                                    + e.getMessage())
+                                    .build())
                     .queue();
             return;
         }
@@ -96,16 +115,18 @@ public class CommandImport implements CommandExecutor {
         boolean enable = event.getOption("enable").getAsBoolean();
 
         guildSettingsService.applyAndSave(
-                event.getGuild(),
-                settings -> settings.toBuilder()
-                        .autoLevelGrant(enable)
-                        .build()
-        );
+                event.getGuild(), settings -> settings.toBuilder().autoLevelGrant(enable).build());
 
-        event.reply("✅ L'importation depuis des rôles Discord a été " + (enable ? "activée" : "désactivée") + " !")
+        event.reply(
+                        "✅ L'importation depuis des rôles Discord a été "
+                                + (enable ? "activée" : "désactivée")
+                                + " !")
                 .queue();
 
-        log.info("{} {} the importation of levels by role in guild \"{}\"",
-                event.getMember().getUser().getAsTag(), enable ? "enabled" : "disabled", event.getGuild().getName());
+        log.info(
+                "{} {} the importation of levels by role in guild \"{}\"",
+                event.getMember().getUser().getAsTag(),
+                enable ? "enabled" : "disabled",
+                event.getGuild().getName());
     }
 }

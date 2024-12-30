@@ -3,16 +3,21 @@ package fr.redstom.gravenlevelling.jpa.services;
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuildReward;
 import fr.redstom.gravenlevelling.jpa.repositories.GravenGuildRewardRepository;
+
 import jakarta.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
+
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -31,14 +36,16 @@ public class GravenGuildRewardService {
     }
 
     @Transactional
-    public GravenGuildReward createReward(Guild guild, long level, Role roleToGive) throws DataIntegrityViolationException {
+    public GravenGuildReward createReward(Guild guild, long level, Role roleToGive)
+            throws DataIntegrityViolationException {
         GravenGuild gGuild = guildService.getOrCreateByDiscordGuild(guild);
 
-        GravenGuildReward reward = GravenGuildReward.builder()
-                .guild(gGuild)
-                .level(level)
-                .roleId(roleToGive.getIdLong())
-                .build();
+        GravenGuildReward reward =
+                GravenGuildReward.builder()
+                        .guild(gGuild)
+                        .level(level)
+                        .roleId(roleToGive.getIdLong())
+                        .build();
 
         return guildRewardRepository.save(reward);
     }
@@ -54,7 +61,8 @@ public class GravenGuildRewardService {
     }
 
     public void grantReward(Member member, long level) {
-        Optional<GravenGuildReward> oReward = getClosestRewardForGuildAtLevel(member.getGuild(), level);
+        Optional<GravenGuildReward> oReward =
+                getClosestRewardForGuildAtLevel(member.getGuild(), level);
         if (oReward.isEmpty()) {
             return;
         }
@@ -70,7 +78,11 @@ public class GravenGuildRewardService {
         }
 
         member.getGuild().addRoleToMember(member, role).queue();
-        log.info("{} has gained reward {} in guild {}", member.getUser().getAsTag(), role.getName(), role.getGuild().getName());
+        log.info(
+                "{} has gained reward {} in guild {}",
+                member.getUser().getAsTag(),
+                role.getName(),
+                role.getGuild().getName());
     }
 
     public Optional<GravenGuildReward> getByMemberRole(Member member, Role role) {

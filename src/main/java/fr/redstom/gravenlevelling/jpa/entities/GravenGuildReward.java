@@ -1,13 +1,11 @@
 package fr.redstom.gravenlevelling.jpa.entities;
 
 import jakarta.persistence.*;
+
 import lombok.*;
 
 @Entity
-@Table(uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"guild_id", "level"})
-})
-
+@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"guild_id", "level"})})
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,5 +24,4 @@ public class GravenGuildReward {
     private long level;
 
     private long roleId;
-
 }

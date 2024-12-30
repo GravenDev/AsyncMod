@@ -7,5 +7,4 @@ public interface ButtonExecutor {
     String id();
 
     void execute(ButtonInteractionEvent event, String[] args);
-
 }

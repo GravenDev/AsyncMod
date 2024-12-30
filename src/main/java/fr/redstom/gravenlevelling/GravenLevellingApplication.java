@@ -11,9 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class GravenLevellingApplication {
 
     public static void main(String[] args) {
-        new SpringApplicationBuilder(GravenLevellingApplication.class)
-                .build()
-                .run(args);
+        new SpringApplicationBuilder(GravenLevellingApplication.class).build().run(args);
     }
-
 }

@@ -4,15 +4,19 @@ import fr.redstom.gravenlevelling.jpa.entities.GravenGuildReward;
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuildSettings;
 import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
 import fr.redstom.gravenlevelling.utils.PlaceholderMessage;
-import java.util.List;
-import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
+
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
+
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +28,8 @@ public class GuildGuildNotificationService {
 
     public Optional<Message> sendNotification(Member member, long level) {
         GravenGuildSettings settings = settingsService.getOrCreateByGuild(member.getGuild());
-        Optional<GravenGuildReward> reward = rewardService.getRewardForGuildAtLevel(member.getGuild(), level);
+        Optional<GravenGuildReward> reward =
+                rewardService.getRewardForGuildAtLevel(member.getGuild(), level);
 
         if (reward.isPresent() && !settings.rewardNotificationEnabled()) {
             reward = Optional.empty();
@@ -45,42 +50,45 @@ public class GuildGuildNotificationService {
         return Optional.empty();
     }
 
-    private Optional<Message> sendDmNotification(Member member, GravenGuildSettings settings, Optional<GravenGuildReward> reward) {
+    private Optional<Message> sendDmNotification(
+            Member member, GravenGuildSettings settings, Optional<GravenGuildReward> reward) {
         GravenMember gMember = memberService.getMemberByDiscordMember(member);
 
         PrivateChannel channel = member.getUser().openPrivateChannel().complete();
 
-        String message = reward
-                .map(r -> getRewardMessage(member, gMember, settings, r))
-                .orElseGet(() -> getMessage(member, gMember, settings));
+        String message =
+                reward.map(r -> getRewardMessage(member, gMember, settings, r))
+                        .orElseGet(() -> getMessage(member, gMember, settings));
 
         return Optional.of(
                 channel.sendMessage(message)
                         .setAllowedMentions(List.of(Message.MentionType.USER))
-                        .complete()
-        );
+                        .complete());
     }
 
-    private Optional<Message> sendServerNotification(Member member, GravenGuildSettings settings, Optional<GravenGuildReward> reward) {
+    private Optional<Message> sendServerNotification(
+            Member member, GravenGuildSettings settings, Optional<GravenGuildReward> reward) {
         GravenMember gMember = memberService.getMemberByDiscordMember(member);
 
-        MessageChannel channel = (MessageChannel) member.getGuild()
-                .getGuildChannelById(settings.notificationChannelType(), settings.notificationChannelId());
-        if(channel == null) {
+        MessageChannel channel =
+                (MessageChannel)
+                        member.getGuild()
+                                .getGuildChannelById(
+                                        settings.notificationChannelType(),
+                                        settings.notificationChannelId());
+        if (channel == null) {
             return Optional.empty();
         }
 
-        String message = reward
-                .map(r -> getRewardMessage(member, gMember, settings, r))
-                .orElseGet(() -> getMessage(member, gMember, settings));
+        String message =
+                reward.map(r -> getRewardMessage(member, gMember, settings, r))
+                        .orElseGet(() -> getMessage(member, gMember, settings));
 
         return Optional.of(
                 channel.sendMessage(message)
                         .setAllowedMentions(List.of(Message.MentionType.USER))
-                        .complete()
-        );
+                        .complete());
     }
-
 
     private String getMessage(Member member, GravenMember gMember, GravenGuildSettings settings) {
         return new PlaceholderMessage(settings.notificationMessage())
@@ -91,7 +99,11 @@ public class GuildGuildNotificationService {
                 .replace();
     }
 
-    private String getRewardMessage(Member member, GravenMember gMember, GravenGuildSettings settings, GravenGuildReward reward) {
+    private String getRewardMessage(
+            Member member,
+            GravenMember gMember,
+            GravenGuildSettings settings,
+            GravenGuildReward reward) {
         Role role = member.getGuild().getRoleById(reward.roleId());
 
         return new PlaceholderMessage(settings.rewardNotificationMessage())
@@ -104,5 +116,4 @@ public class GuildGuildNotificationService {
                 .with("level", String.valueOf(gMember.level()))
                 .replace();
     }
-
 }

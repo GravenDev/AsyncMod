@@ -1,8 +1,9 @@
 package fr.redstom.gravenlevelling.utils;
 
+import lombok.RequiredArgsConstructor;
+
 import java.util.HashMap;
 import java.util.Map;
-import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 public class PlaceholderMessage {
@@ -22,5 +23,4 @@ public class PlaceholderMessage {
         }
         return result;
     }
-
 }
