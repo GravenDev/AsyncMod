@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +36,9 @@ public class GravenMemberService {
     private final GravenGuildSettingsService settingsService;
 
     private final JDA jda;
+
+    @Value("${xp.timeout}")
+    private int timeout = 60;
 
     @Transactional
     public GravenMember getMemberByDiscordMember(Member member) {
@@ -91,8 +95,8 @@ public class GravenMemberService {
 
         Instant messageCreated = message.getTimeCreated().toInstant();
 
-        long distance = ChronoUnit.MINUTES.between(messageCreated, gMember.lastMessageAt());
-        if (Math.abs(distance) < 1) return false;
+        long distance = ChronoUnit.SECONDS.between(messageCreated, gMember.lastMessageAt());
+        if (Math.abs(distance) < timeout) return false;
 
         long xpToGain = levelUtils.flattenMessageLengthIntoGain(message.getContentRaw().length());
 
@@ -106,6 +110,10 @@ public class GravenMemberService {
 
     @Transactional
     public void addXp(Member member, long amount) {
+        if (settingsService.getOrCreateByGuild(member.getGuild()).pause()) {
+            return;
+        }
+
         GravenMember gMember = getMemberByDiscordMember(member);
 
         gMember.experience(gMember.experience() + amount);
