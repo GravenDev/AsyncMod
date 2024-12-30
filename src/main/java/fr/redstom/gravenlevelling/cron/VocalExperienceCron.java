@@ -24,10 +24,11 @@ public class VocalExperienceCron {
             for (VoiceChannel channel : guild.getVoiceChannels()) {
                 System.out.println("VoiceChannel: " + channel.getName());
                 channel.getMembers().stream()
+                        .peek(member -> System.out.println("Member: " + member.getEffectiveName() + " | " + member.getVoiceState()))
                         .filter(user -> user.getVoiceState() != null)
                         .filter(user -> !user.getVoiceState().isDeafened())
                         .filter(user -> !user.getVoiceState().isMuted())
-                        .peek(member -> System.out.println("User: " + member.getUser().getName()))
+                        .peek(member -> System.out.println("Member left: " + member.getUser().getName()))
                         .forEach(member -> memberService.addXp(member, 1));
             }
 
