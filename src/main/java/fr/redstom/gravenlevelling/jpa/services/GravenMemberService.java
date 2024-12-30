@@ -82,7 +82,7 @@ public class GravenMemberService {
     }
 
     @Transactional
-    public boolean addXp(Member member, Message message) {
+    public boolean addXpFromMessage(Member member, Message message) {
         if (settingsService.getOrCreateByGuild(member.getGuild()).pause()) {
             return false;
         }
@@ -96,14 +96,22 @@ public class GravenMemberService {
 
         long xpToGain = levelUtils.flattenMessageLengthIntoGain(message.getContentRaw().length());
 
-        gMember.experience(gMember.experience() + xpToGain);
+        addXp(member, xpToGain);
         gMember.lastMessageAt(messageCreated);
 
         memberRepository.save(gMember);
 
-        checkLevel(member);
-
         return true;
+    }
+
+    @Transactional
+    public void addXp(Member member, long amount) {
+        GravenMember gMember = getMemberByDiscordMember(member);
+
+        gMember.experience(gMember.experience() + amount);
+        memberRepository.save(gMember);
+
+        checkLevel(member);
     }
 
     @Transactional
@@ -123,7 +131,6 @@ public class GravenMemberService {
         notificationService.sendNotification(member, gMember.level());
 
         memberRepository.save(gMember);
-
 
         return true;
     }

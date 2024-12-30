@@ -20,6 +20,6 @@ public class MessageListener extends ListenerAdapter {
             || event.isWebhookMessage()
             || event.getMember() == null) return;
 
-        memberService.addXp(event.getMember(), event.getMessage());
+        memberService.addXpFromMessage(event.getMember(), event.getMessage());
     }
 }
