@@ -38,7 +38,7 @@ public class VocalExperienceCron {
                         .filter(user -> !user.getVoiceState().isDeafened())
                         .filter(user -> !user.getVoiceState().isMuted())
                         .peek(_ -> counter.incrementAndGet())
-                        .forEach(member -> memberService.addXp(member, per30sec));
+                        .forEach(member -> memberService.addXp(member, per30sec, "Voice activity"));
             }
         }
 
