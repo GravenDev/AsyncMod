@@ -13,14 +13,15 @@ import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.concrete.PrivateChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@RequiredArgsConstructor
-public class GuildGuildNotificationService {
+@RequiredArgsConstructor(onConstructor_ = @__(@Lazy))
+public class GuildNotificationService {
 
     private final GravenGuildSettingsService settingsService;
     private final GravenGuildRewardService rewardService;

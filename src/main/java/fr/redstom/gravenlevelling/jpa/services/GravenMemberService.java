@@ -39,7 +39,7 @@ public class GravenMemberService {
     private final GravenGuildService guildService;
     private final GravenUserService userService;
     private final GravenGuildRewardService rewardService;
-    private final GuildGuildNotificationService notificationService;
+    private final GuildNotificationService notificationService;
     private final GravenGuildSettingsService settingsService;
 
     private final JDA jda;
