@@ -33,6 +33,8 @@ public class VocalExperienceCron {
         AtomicLong counter = new AtomicLong();
         for (Guild guild : bot.getGuilds()) {
             for (VoiceChannel channel : guild.getVoiceChannels()) {
+                if (channel.getMembers().size() < 2) continue;
+
                 channel.getMembers().stream()
                         .filter(user -> user.getVoiceState() != null)
                         .filter(user -> !user.getVoiceState().isDeafened())
