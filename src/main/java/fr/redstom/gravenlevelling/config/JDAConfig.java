@@ -22,7 +22,7 @@ public class JDAConfig {
                List<CommandExecutor> commandExecutors) throws InterruptedException {
         JDA client = JDABuilder.create(
                         token,
-                        GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS
+                        GatewayIntent.GUILD_MESSAGES, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_VOICE_STATES
                 )
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .build();
