@@ -6,6 +6,7 @@ import fr.redstom.gravenlevelling.jpa.services.GravenMemberService;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
@@ -14,6 +15,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
+@Slf4j
 @Command
 @RequiredArgsConstructor
 public class CommandLevels implements CommandExecutor {
@@ -52,12 +54,19 @@ public class CommandLevels implements CommandExecutor {
         int lvl = event.getOption("lvl").getAsInt();
 
         GravenMember gMember = memberService.getMemberByDiscordMember(member);
-        gMember.level(gMember.level() + lvl);
+        long oldLevel = gMember.level();
+
+        gMember.level(oldLevel + lvl);
         gMember.experience(0);
 
         memberRepository.save(gMember);
 
         event.reply(STR."✅ L'utilisateur \{member.getAsMention()} est maintenant au niveau **\{gMember.level()}**").queue();
+        log.info("{} changed level of {} from {} to {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                member.getUser().getAsTag(),
+                oldLevel, oldLevel + lvl,
+                event.getGuild().getName());
     }
 
     private void remove(SlashCommandInteractionEvent event) {
@@ -65,12 +74,19 @@ public class CommandLevels implements CommandExecutor {
         int lvl = event.getOption("lvl").getAsInt();
 
         GravenMember gMember = memberService.getMemberByDiscordMember(member);
-        gMember.level(gMember.level() - lvl);
+        long oldLevel = gMember.level();
+
+        gMember.level(oldLevel - lvl);
         gMember.experience(0);
 
         memberRepository.save(gMember);
 
         event.reply(STR."✅ L'utilisateur \{member.getAsMention()} est maintenant au niveau **\{gMember.level()}**").queue();
+        log.info("{} changed level of {} from {} to {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                member.getUser().getAsTag(),
+                oldLevel, oldLevel - lvl,
+                event.getGuild().getName());
     }
 
     private void set(SlashCommandInteractionEvent event) {
@@ -78,11 +94,18 @@ public class CommandLevels implements CommandExecutor {
         int lvl = event.getOption("lvl").getAsInt();
 
         GravenMember gMember = memberService.getMemberByDiscordMember(member);
+        long oldLevel = gMember.level();
+
         gMember.level(lvl);
         gMember.experience(0);
 
         memberRepository.save(gMember);
 
         event.reply(STR."✅ L'utilisateur \{member.getAsMention()} est maintenant au niveau **\{gMember.level()}**").queue();
+        log.info("{} changed level of {} from {} to {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                member.getUser().getAsTag(),
+                oldLevel, lvl,
+                event.getGuild().getName());
     }
 }

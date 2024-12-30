@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -17,9 +18,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
+
+@Slf4j
 public class ModalListener extends ListenerAdapter implements BeanPostProcessor {
 
-    private static final Logger log = LoggerFactory.getLogger(ModalListener.class);
     Map<String, Consumer<ModalInteractionEvent>> handlers = new HashMap<>();
 
     /**

@@ -8,9 +8,12 @@ import fr.redstom.gravenlevelling.utils.GravenColors;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.jda.EmbedUtils;
+
 import java.util.List;
 import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;
@@ -23,6 +26,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.springframework.dao.DataIntegrityViolationException;
 
+@Slf4j
 @Command
 @RequiredArgsConstructor
 public class CommandReward implements CommandExecutor {
@@ -69,6 +73,10 @@ public class CommandReward implements CommandExecutor {
                             .build())
                     .addActionRow(DELETE_BUTTON)
                     .queue();
+            log.info("{} added a reward at level {} with role {} in guild {}",
+                    event.getMember().getUser().getAsTag(),
+                    level, role.getName(),
+                    event.getGuild().getName());
         } catch (DataIntegrityViolationException _) {
             event.replyEmbeds(EmbedUtils
                             .error("Il existe déjà une récompense associée au **niveau " + level + "** !")
@@ -102,6 +110,9 @@ public class CommandReward implements CommandExecutor {
                         .build())
                 .addActionRow(DELETE_BUTTON)
                 .queue();
+        log.info("{} removed reward at level {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                level, event.getGuild().getName());
     }
 
     private void list(SlashCommandInteractionEvent event) {

@@ -33,7 +33,7 @@ public interface GravenMemberRepository extends CrudRepository<GravenMember, Gra
                            ROW_NUMBER() OVER (ORDER BY gm.level DESC, gm.experience DESC, gm.user.id ASC) AS rank
                     FROM GravenMember gm
                     WHERE gm.guild = :guild
-           			AND NOT (gm.level = 0 AND gm.experience = 0)
+                    AND NOT (gm.level = 0 AND gm.experience = 0)
                 ) memberRank
                 WHERE memberRank.user = :user
             """)

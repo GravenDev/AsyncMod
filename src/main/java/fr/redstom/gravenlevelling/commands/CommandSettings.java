@@ -5,6 +5,7 @@ import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.jda.ModalHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -15,7 +16,9 @@ import net.dv8tion.jda.api.interactions.commands.build.SlashCommandData;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import net.dv8tion.jda.api.interactions.components.text.TextInput;
 import net.dv8tion.jda.api.interactions.components.text.TextInputStyle;
+import net.dv8tion.jda.api.interactions.modals.Modal;
 
+@Slf4j
 @Command
 @RequiredArgsConstructor
 public class CommandSettings implements CommandExecutor {
@@ -63,6 +66,11 @@ public class CommandSettings implements CommandExecutor {
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().pause(pause).build());
         event.reply("Le bot a été "  + (pause ? "mis en pause" : "réactivé")).queue();
+
+        log.info("{} changed setting \"Paused\" to {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                pause,
+                event.getGuild().getName());
     }
 
     private void setNotificationChannel(SlashCommandInteractionEvent event) {
@@ -73,6 +81,11 @@ public class CommandSettings implements CommandExecutor {
                 .notificationChannelType(channel.getType())
                 .build());
         event.reply("✅ Le salon de notification a été mis à jour").queue();
+
+        log.info("{} changed setting \"Notification Channel\" to #{} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                channel.getName(),
+                event.getGuild().getName());
     }
 
     private void setDmNotifications(SlashCommandInteractionEvent event) {
@@ -80,6 +93,11 @@ public class CommandSettings implements CommandExecutor {
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().dmNotifications(enabled).build());
         event.reply("✅ Les notifications par message privé ont été mises à jour").queue();
+
+        log.info("{} changed setting \"Dm Notifications\" to {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                enabled,
+                event.getGuild().getName());
     }
 
     private void setLevelNotifications(SlashCommandInteractionEvent event) {
@@ -87,6 +105,11 @@ public class CommandSettings implements CommandExecutor {
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().levelNotificationEnabled(enabled).build());
         event.reply("✅ Les notifications de montée de niveau ont été mises à jour").queue();
+
+        log.info("{} changed setting \"Level Notifications\" to {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                enabled,
+                event.getGuild().getName());
     }
 
     private void setRewardNotifications(SlashCommandInteractionEvent event) {
@@ -94,10 +117,15 @@ public class CommandSettings implements CommandExecutor {
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().rewardNotificationEnabled(enabled).build());
         event.reply("✅ Les notifications de récompense ont été mises à jour").queue();
+
+        log.info("{} changed setting \"Reward Notifications\" to {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                enabled,
+                event.getGuild().getName());
     }
 
     private void setNotificationMessage(SlashCommandInteractionEvent event) {
-        event.replyModal(net.dv8tion.jda.api.interactions.modals.Modal.create("set-notification-message", "Changer le message de notification")
+        event.replyModal(Modal.create("set-notification-message", "Changer le message de notification")
                         .addActionRow(TextInput.create("message", "Message de notification", TextInputStyle.PARAGRAPH)
                                 .build())
                         .build())
@@ -105,7 +133,7 @@ public class CommandSettings implements CommandExecutor {
     }
 
     private void setRewardNotificationMessage(SlashCommandInteractionEvent event) {
-        event.replyModal(net.dv8tion.jda.api.interactions.modals.Modal.create("set-reward-notification-message", "Changer le message de notification de récompense")
+        event.replyModal(Modal.create("set-reward-notification-message", "Changer le message de notification de récompense")
                         .addActionRow(TextInput.create("message", "Message de notification", TextInputStyle.PARAGRAPH)
                                 .build())
                         .build())
@@ -133,6 +161,11 @@ public class CommandSettings implements CommandExecutor {
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().rewardNotificationMessage(message).build());
         event.reply("✅ Le message de notification de récompense a été mis à jour").queue();
+
+        log.info("{} changed setting \"Reward Notification Message\" to {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                message,
+                event.getGuild().getName());
     }
 
     @ModalHandler("set-notification-message")
@@ -141,5 +174,10 @@ public class CommandSettings implements CommandExecutor {
 
         settingsService.applyAndSave(event.getGuild(), settings -> settings.toBuilder().notificationMessage(message).build());
         event.reply("✅ Le message de notification a été mis à jour").queue();
+
+        log.info("{} changed setting \"Notification Message\" to {} in guild {}",
+                event.getMember().getUser().getAsTag(),
+                message,
+                event.getGuild().getName());
     }
 }

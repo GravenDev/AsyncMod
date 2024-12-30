@@ -8,10 +8,14 @@ import fr.redstom.gravenlevelling.utils.imports.ImportEntry;
 import fr.redstom.gravenlevelling.utils.jda.Command;
 import fr.redstom.gravenlevelling.utils.jda.CommandExecutor;
 import fr.redstom.gravenlevelling.utils.jda.EmbedUtils;
+
 import java.io.InputStream;
 import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -24,6 +28,8 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 
 @Command
 @RequiredArgsConstructor
+
+@Slf4j
 public class CommandImport implements CommandExecutor {
 
     private final GravenGuildSettingsService guildSettingsService;
@@ -60,13 +66,16 @@ public class CommandImport implements CommandExecutor {
 
         InteractionHook hook = event.deferReply().complete();
         file.getProxy().download().thenAccept(stream -> this.decode(event, hook, stream));
+
+        log.info("{} imported a json file for guild \"{}\"",
+                event.getMember().getUser().getAsTag(), event.getGuild().getName());
     }
 
     @SneakyThrows
     private void decode(SlashCommandInteractionEvent event, InteractionHook hook, InputStream stream) {
         List<ImportEntry> model;
         try {
-            model = mapper.readValue(stream, new TypeReference<List<ImportEntry>>() {
+            model = mapper.readValue(stream, new TypeReference<>() {
             });
         } catch (Exception e) {
             hook.editOriginal("")
@@ -95,5 +104,8 @@ public class CommandImport implements CommandExecutor {
 
         event.reply("✅ L'importation depuis des rôles Discord a été " + (enable ? "activée" : "désactivée") + " !")
                 .queue();
+
+        log.info("{} {} the importation of levels by role in guild \"{}\"",
+                event.getMember().getUser().getAsTag(), enable ? "enabled" : "disabled", event.getGuild().getName());
     }
 }

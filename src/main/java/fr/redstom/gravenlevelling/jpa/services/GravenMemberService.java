@@ -1,5 +1,6 @@
 package fr.redstom.gravenlevelling.jpa.services;
 
+import fr.redstom.gravenlevelling.events.ModalListener;
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuild;
 import fr.redstom.gravenlevelling.jpa.entities.GravenGuildSettings;
 import fr.redstom.gravenlevelling.jpa.entities.GravenMember;
@@ -12,15 +13,19 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.Role;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor(onConstructor_ = @Lazy)
 public class GravenMemberService {
@@ -100,16 +105,17 @@ public class GravenMemberService {
 
         long xpToGain = levelUtils.flattenMessageLengthIntoGain(message.getContentRaw().length());
 
-        addXp(member, xpToGain);
+        gMember.experience(gMember.experience() + xpToGain);
         gMember.lastMessageAt(messageCreated);
 
         memberRepository.save(gMember);
+        log.info("{} got added {} xp from message.", member.getUser().getAsTag(), xpToGain);
 
         return true;
     }
 
     @Transactional
-    public void addXp(Member member, long amount) {
+    public void addXp(Member member, long amount, String reason) {
         if (settingsService.getOrCreateByGuild(member.getGuild()).pause()) {
             return;
         }
@@ -118,8 +124,14 @@ public class GravenMemberService {
 
         gMember.experience(gMember.experience() + amount);
         memberRepository.save(gMember);
+        log.info("{} got added {} xp for {} in guild {}.", member.getUser().getAsTag(), amount, reason, member.getGuild().getName());
 
         checkLevel(member);
+    }
+
+    @Transactional
+    public void addXp(Member member, long amount) {
+        addXp(member, amount, "Unknown reason");
     }
 
     @Transactional
@@ -139,6 +151,7 @@ public class GravenMemberService {
         notificationService.sendNotification(member, gMember.level());
 
         memberRepository.save(gMember);
+        log.info("{} has levelled up to level {} in guild {}.", member.getUser().getAsTag(), gMember.level(), gMember.level());
 
         return true;
     }

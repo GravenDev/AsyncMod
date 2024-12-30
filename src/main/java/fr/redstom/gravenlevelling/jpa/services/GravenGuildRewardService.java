@@ -7,12 +7,14 @@ import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GravenGuildRewardService {
@@ -66,7 +68,9 @@ public class GravenGuildRewardService {
         if (role == null) {
             return;
         }
+
         member.getGuild().addRoleToMember(member, role).queue();
+        log.info("{} has gained reward {} in guild {}", member.getUser().getAsTag(), role.getName(), role.getGuild().getName());
     }
 
     public Optional<GravenGuildReward> getByMemberRole(Member member, Role role) {

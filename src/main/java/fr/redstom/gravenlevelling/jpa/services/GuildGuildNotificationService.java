@@ -83,7 +83,6 @@ public class GuildGuildNotificationService {
 
 
     private String getMessage(Member member, GravenMember gMember, GravenGuildSettings settings) {
-
         return new PlaceholderMessage(settings.notificationMessage())
                 .with("user.mention", member.getAsMention())
                 .with("user.name", member.getEffectiveName())
