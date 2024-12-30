@@ -26,14 +26,14 @@ public class CommandLevels implements CommandExecutor {
         return Commands.slash("levels", "Permet de gérer les niveaux des membres")
                 .addSubcommands(
                         new SubcommandData("add", "Ajoute des niveaux à un membre")
-                                .addOption(OptionType.USER, "user", "Utilisateur")
-                                .addOption(OptionType.INTEGER, "lvl", "Niveaux à ajouter"),
+                                .addOption(OptionType.USER, "user", "Utilisateur", true)
+                                .addOption(OptionType.INTEGER, "lvl", "Niveaux à ajouter", true),
                         new SubcommandData("remove", "Retire des niveaux à un membre")
-                                .addOption(OptionType.USER, "user", "Utilisateur")
-                                .addOption(OptionType.INTEGER, "lvl", "Niveaux à retirer"),
+                                .addOption(OptionType.USER, "user", "Utilisateur", true)
+                                .addOption(OptionType.INTEGER, "lvl", "Niveaux à retirer", true),
                         new SubcommandData("set", "Définit le niveau d'un membre")
-                                .addOption(OptionType.USER, "user", "Utilisateur")
-                                .addOption(OptionType.INTEGER, "lvl", "Niveau à définir")
+                                .addOption(OptionType.USER, "user", "Utilisateur", true)
+                                .addOption(OptionType.INTEGER, "lvl", "Niveau à définir", true)
                 )
                 .setDefaultPermissions(DefaultMemberPermissions.DISABLED);
     }
