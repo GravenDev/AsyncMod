@@ -17,13 +17,18 @@ public class VocalExperienceCron {
 
     @Scheduled(cron = "*/30 * * * * *")
     public void compute() {
+        System.out.println("Cron compute");
+
         for (Guild guild : bot.getGuilds()) {
+            System.out.println("Guild: " + guild.getName());
             for (VoiceChannel channel : guild.getVoiceChannels()) {
+                System.out.println("VoiceChannel: " + channel.getName());
                 channel.getMembers().stream()
                         .filter(user -> user.getVoiceState() != null)
                         .filter(user -> !user.getVoiceState().isDeafened())
                         .filter(user -> !user.getVoiceState().isMuted())
-                        .forEach(member -> memberService.addXp(member, 2));
+                        .peek(member -> System.out.println("User: " + member.getUser().getName()))
+                        .forEach(member -> memberService.addXp(member, 1));
             }
 
         }
