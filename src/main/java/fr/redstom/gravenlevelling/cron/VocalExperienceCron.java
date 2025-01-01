@@ -7,13 +7,16 @@ import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Stream;
 
 @Slf4j
 @Service
@@ -33,14 +36,19 @@ public class VocalExperienceCron {
         AtomicLong counter = new AtomicLong();
         for (Guild guild : bot.getGuilds()) {
             for (VoiceChannel channel : guild.getVoiceChannels()) {
-                if (channel.getMembers().size() < 2) continue;
 
-                channel.getMembers().stream()
+                List<Member> members = channel.getMembers().stream()
                         .filter(user -> user.getVoiceState() != null)
                         .filter(user -> !user.getVoiceState().isDeafened())
                         .filter(user -> !user.getVoiceState().isMuted())
                         .peek(_ -> counter.incrementAndGet())
-                        .forEach(member -> memberService.addXp(member, per30sec, "Voice activity"));
+                        .toList();
+
+                if(members.size() < 2) {
+                    continue;
+                }
+
+                members.forEach(member -> memberService.addXp(member, per30sec, "Voice activity"));
             }
         }
 
