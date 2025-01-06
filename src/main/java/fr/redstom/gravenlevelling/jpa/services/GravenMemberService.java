@@ -113,9 +113,10 @@ public class GravenMemberService {
         gMember.experience(gMember.experience() + xpToGain);
         gMember.lastMessageAt(messageCreated);
 
+        checkLevel(member);
         memberRepository.save(gMember);
-        log.info("{} got added {} xp from message.", member.getUser().getAsTag(), xpToGain);
 
+        log.info("{} got added {} xp from message.", member.getUser().getAsTag(), xpToGain);
         return true;
     }
 
