@@ -7,11 +7,11 @@ WORKDIR /app
 COPY build.gradle.kts settings.gradle.kts gradlew ./
 COPY gradle ./gradle
 
-RUN ./gradlew dependencies --no-daemon
+RUN gradle dependencies --no-daemon
 
 COPY . .
 
-RUN ./gradlew bootJar --no-daemon
+RUN gradle bootJar --no-daemon
 
 FROM eclipse-temurin:22-jdk AS runtime
 
