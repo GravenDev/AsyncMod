@@ -1,5 +1,6 @@
 package fr.itsasync.moderation.events;
 
+import fr.itsasync.moderation.utils.jda.Listener;
 import fr.itsasync.moderation.utils.jda.ModalHandler;
 
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-@Service
+@Listener
 @RequiredArgsConstructor
 @Slf4j
 public class ModalListener extends ListenerAdapter implements BeanPostProcessor {

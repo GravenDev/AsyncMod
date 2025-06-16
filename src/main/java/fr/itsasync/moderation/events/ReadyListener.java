@@ -1,5 +1,6 @@
 package fr.itsasync.moderation.events;
 
+import fr.itsasync.moderation.utils.jda.Listener;
 import lombok.extern.slf4j.Slf4j;
 
 import net.dv8tion.jda.api.entities.Activity;
@@ -8,7 +9,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import org.springframework.stereotype.Service;
 
-@Service
+@Listener
 @Slf4j
 public class ReadyListener extends ListenerAdapter {
 

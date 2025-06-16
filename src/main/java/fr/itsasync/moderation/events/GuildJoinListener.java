@@ -3,13 +3,14 @@ package fr.itsasync.moderation.events;
 import fr.itsasync.moderation.jpa.entities.AsyncMember;
 import fr.itsasync.moderation.jpa.services.AsyncGuildRewardService;
 import fr.itsasync.moderation.jpa.services.AsyncMemberService;
+import fr.itsasync.moderation.utils.jda.Listener;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.springframework.stereotype.Service;
 
-@Service
+@Listener
 @RequiredArgsConstructor
 public class GuildJoinListener extends ListenerAdapter {
 

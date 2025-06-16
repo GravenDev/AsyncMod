@@ -2,6 +2,7 @@ package fr.itsasync.moderation.events;
 
 import fr.itsasync.moderation.utils.jda.ButtonExecutor;
 
+import fr.itsasync.moderation.utils.jda.Listener;
 import lombok.RequiredArgsConstructor;
 
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.List;
 
-@Service
+@Listener
 @RequiredArgsConstructor
 public class ButtonListener extends ListenerAdapter {
 

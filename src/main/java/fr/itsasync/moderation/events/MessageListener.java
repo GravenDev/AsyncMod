@@ -2,6 +2,7 @@ package fr.itsasync.moderation.events;
 
 import fr.itsasync.moderation.jpa.services.AsyncMemberService;
 
+import fr.itsasync.moderation.utils.jda.Listener;
 import lombok.RequiredArgsConstructor;
 
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
@@ -9,7 +10,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import org.springframework.stereotype.Service;
 
-@Service
+@Listener
 @RequiredArgsConstructor
 public class MessageListener extends ListenerAdapter {
 
