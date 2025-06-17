@@ -17,7 +17,7 @@ import java.time.Instant;
 @Setter
 public class AsyncMember {
 
-    @ManyToOne @Id private GravenUser user;
+    @ManyToOne @Id private AsyncUser user;
 
     @ManyToOne @Id private AsyncGuild guild;
 
@@ -31,7 +31,7 @@ public class AsyncMember {
     @Getter
     @Setter
     public static class AsyncMemberId implements Serializable {
-        private GravenUser user;
+        private AsyncUser user;
 
         private AsyncGuild guild;
     }

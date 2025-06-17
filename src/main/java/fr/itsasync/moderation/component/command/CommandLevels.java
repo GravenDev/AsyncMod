@@ -1,7 +1,7 @@
 package fr.itsasync.moderation.component.command;
 
 import fr.itsasync.moderation.data.entity.AsyncMember;
-import fr.itsasync.moderation.data.repository.GravenMemberRepository;
+import fr.itsasync.moderation.data.repository.AsyncMemberRepository;
 import fr.itsasync.moderation.service.AsyncMemberService;
 import fr.itsasync.moderation.util.annotation.Command;
 import fr.itsasync.moderation.util.executor.CommandExecutor;
@@ -23,7 +23,7 @@ import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 public class CommandLevels implements CommandExecutor {
 
     private final AsyncMemberService memberService;
-    private final GravenMemberRepository memberRepository;
+    private final AsyncMemberRepository memberRepository;
 
     @Override
     public SlashCommandData data() {

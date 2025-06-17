@@ -2,7 +2,7 @@ package fr.itsasync.moderation.data.repository;
 
 import fr.itsasync.moderation.data.entity.AsyncGuild;
 import fr.itsasync.moderation.data.entity.AsyncMember;
-import fr.itsasync.moderation.data.entity.GravenUser;
+import fr.itsasync.moderation.data.entity.AsyncUser;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface GravenMemberRepository
+public interface AsyncMemberRepository
         extends CrudRepository<AsyncMember, AsyncMember.AsyncMemberId> {
 
-    List<AsyncMember> findAllByUser(GravenUser user);
+    List<AsyncMember> findAllByUser(AsyncUser user);
 
     List<AsyncMember> findAllByUserId(long userId);
 
@@ -27,7 +27,7 @@ public interface GravenMemberRepository
     List<AsyncMember> findAllByGuildId(long guildId);
 
     @Query("select g from AsyncMember g where g.user = ?1 and g.guild = ?2")
-    Optional<AsyncMember> findByUserAndGuild(GravenUser user, AsyncGuild guild);
+    Optional<AsyncMember> findByUserAndGuild(AsyncUser user, AsyncGuild guild);
 
     @Query(
             """
@@ -41,7 +41,7 @@ public interface GravenMemberRepository
     ) memberRank
     WHERE memberRank.user = :user
 """)
-    int findPositionOfMember(@Param("user") GravenUser user, @Param("guild") AsyncGuild guild);
+    int findPositionOfMember(@Param("user") AsyncUser user, @Param("guild") AsyncGuild guild);
 
     @Query(
             """

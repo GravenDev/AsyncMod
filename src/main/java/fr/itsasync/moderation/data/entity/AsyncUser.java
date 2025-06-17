@@ -13,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class GravenUser {
+public class AsyncUser {
 
     @Id private long id;
 }

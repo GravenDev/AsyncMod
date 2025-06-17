@@ -3,7 +3,7 @@ package fr.itsasync.moderation.service;
 import fr.itsasync.moderation.data.entity.AsyncGuild;
 import fr.itsasync.moderation.data.entity.AsyncMember;
 import fr.itsasync.moderation.data.repository.AsyncGuildRepository;
-import fr.itsasync.moderation.data.repository.GravenMemberRepository;
+import fr.itsasync.moderation.data.repository.AsyncMemberRepository;
 import fr.itsasync.moderation.util.ImageGenerator;
 
 import jakarta.annotation.Nullable;
@@ -30,7 +30,7 @@ import javax.imageio.ImageIO;
 public class AsyncGuildService {
 
     private final AsyncGuildRepository guildRepository;
-    private final GravenMemberRepository memberRepository;
+    private final AsyncMemberRepository memberRepository;
 
     private final AsyncMemberService memberService;
 

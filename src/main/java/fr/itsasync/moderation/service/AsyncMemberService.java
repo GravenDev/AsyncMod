@@ -3,8 +3,8 @@ package fr.itsasync.moderation.service;
 import fr.itsasync.moderation.data.entity.AsyncGuild;
 import fr.itsasync.moderation.data.entity.AsyncGuildSettings;
 import fr.itsasync.moderation.data.entity.AsyncMember;
-import fr.itsasync.moderation.data.entity.GravenUser;
-import fr.itsasync.moderation.data.repository.GravenMemberRepository;
+import fr.itsasync.moderation.data.entity.AsyncUser;
+import fr.itsasync.moderation.data.repository.AsyncMemberRepository;
 import fr.itsasync.moderation.util.LevelUtils;
 
 import jakarta.annotation.Nullable;
@@ -34,10 +34,10 @@ public class AsyncMemberService {
 
     private final LevelUtils levelUtils;
 
-    private final GravenMemberRepository memberRepository;
+    private final AsyncMemberRepository memberRepository;
 
     private final AsyncGuildService guildService;
-    private final GravenUserService userService;
+    private final AsyncUserService userService;
     private final AsyncGuildRewardService rewardService;
     private final GuildNotificationService notificationService;
     private final AsyncGuildSettingsService settingsService;
@@ -49,7 +49,7 @@ public class AsyncMemberService {
 
     @Transactional
     public AsyncMember getMemberByDiscordMember(Member member) {
-        GravenUser user = userService.getOrCreateByDiscordUser(member.getUser());
+        AsyncUser user = userService.getOrCreateByDiscordUser(member.getUser());
         AsyncGuild guild = guildService.getOrCreateByDiscordGuild(member.getGuild());
 
         return memberRepository
@@ -59,7 +59,7 @@ public class AsyncMemberService {
 
     @Transactional
     public AsyncMember getMemberByGuildAndMemberId(Guild guild, long userId, long baseLevel) {
-        GravenUser user = userService.getOrCreateByUserId(userId);
+        AsyncUser user = userService.getOrCreateByUserId(userId);
         AsyncGuild gGuild = guildService.getOrCreateByDiscordGuild(guild);
 
         return memberRepository
@@ -74,7 +74,7 @@ public class AsyncMemberService {
                                                 .build()));
     }
 
-    private AsyncMember createMember(Member member, GravenUser user, AsyncGuild guild) {
+    private AsyncMember createMember(Member member, AsyncUser user, AsyncGuild guild) {
         AsyncGuildSettings settings = settingsService.getOrCreateByGuild(member.getGuild());
 
         AtomicLong level = new AtomicLong();
