@@ -1,6 +1,6 @@
 package fr.itsasync.moderation.cron;
 
-import fr.itsasync.moderation.jpa.services.AsyncMemberService;
+import fr.itsasync.moderation.service.AsyncMemberService;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

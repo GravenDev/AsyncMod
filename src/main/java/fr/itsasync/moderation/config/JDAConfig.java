@@ -1,6 +1,6 @@
 package fr.itsasync.moderation.config;
 
-import fr.itsasync.moderation.utils.jda.CommandExecutor;
+import fr.itsasync.moderation.util.executor.CommandExecutor;
 
 import lombok.extern.slf4j.Slf4j;
 
