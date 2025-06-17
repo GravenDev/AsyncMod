@@ -2,10 +2,10 @@ package fr.itsasync.moderation.component.command;
 
 import fr.itsasync.moderation.data.entity.AsyncMember;
 import fr.itsasync.moderation.service.AsyncMemberService;
+import fr.itsasync.moderation.util.Embeds;
 import fr.itsasync.moderation.util.ImageGenerator;
 import fr.itsasync.moderation.util.annotation.Command;
 import fr.itsasync.moderation.util.executor.CommandExecutor;
-import fr.itsasync.moderation.util.Embeds;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

@@ -1,8 +1,8 @@
 package fr.itsasync.moderation.event;
 
+import fr.itsasync.moderation.util.annotation.Listener;
 import fr.itsasync.moderation.util.executor.CommandExecutor;
 
-import fr.itsasync.moderation.util.annotation.Listener;
 import lombok.RequiredArgsConstructor;
 
 import net.dv8tion.jda.api.events.interaction.command.CommandAutoCompleteInteractionEvent;

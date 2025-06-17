@@ -2,8 +2,8 @@ package fr.itsasync.moderation.component.command;
 
 import fr.itsasync.moderation.service.AsyncGuildSettingsService;
 import fr.itsasync.moderation.util.annotation.Command;
-import fr.itsasync.moderation.util.executor.CommandExecutor;
 import fr.itsasync.moderation.util.annotation.ModalHandler;
+import fr.itsasync.moderation.util.executor.CommandExecutor;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -94,6 +94,7 @@ public class CommandSettings implements CommandExecutor {
             case "set-reward-notification-message" -> setRewardNotificationMessage(event);
             case "get-placeholders" -> sendPlaceholders(event);
             case "pause" -> pause(event);
+            default -> throw new IllegalArgumentException("Impossible subcommand!");
         }
     }
 

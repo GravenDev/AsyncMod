@@ -1,9 +1,9 @@
 package fr.itsasync.moderation.service;
 
+import fr.itsasync.moderation.data.PlaceholderMessage;
 import fr.itsasync.moderation.data.entity.AsyncGuildReward;
 import fr.itsasync.moderation.data.entity.AsyncGuildSettings;
 import fr.itsasync.moderation.data.entity.AsyncMember;
-import fr.itsasync.moderation.data.PlaceholderMessage;
 
 import lombok.RequiredArgsConstructor;
 

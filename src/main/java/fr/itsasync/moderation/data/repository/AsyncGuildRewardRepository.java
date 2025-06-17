@@ -14,8 +14,7 @@ public interface AsyncGuildRewardRepository extends CrudRepository<AsyncGuildRew
 
     List<AsyncGuildReward> findAllByGuildOrderByLevelAsc(AsyncGuild guild);
 
-    Optional<AsyncGuildReward> findTopByGuildAndLevelOrderByLevelDesc(
-            AsyncGuild guild, long level);
+    Optional<AsyncGuildReward> findTopByGuildAndLevelOrderByLevelDesc(AsyncGuild guild, long level);
 
     Optional<AsyncGuildReward> findByGuildAndLevel(AsyncGuild guild, long level);
 

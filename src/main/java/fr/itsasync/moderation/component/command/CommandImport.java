@@ -3,12 +3,12 @@ package fr.itsasync.moderation.component.command;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import fr.itsasync.moderation.data.ImportEntry;
 import fr.itsasync.moderation.service.AsyncGuildSettingsService;
 import fr.itsasync.moderation.service.AsyncMemberService;
-import fr.itsasync.moderation.data.ImportEntry;
+import fr.itsasync.moderation.util.Embeds;
 import fr.itsasync.moderation.util.annotation.Command;
 import fr.itsasync.moderation.util.executor.CommandExecutor;
-import fr.itsasync.moderation.util.Embeds;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -65,6 +65,7 @@ public class CommandImport implements CommandExecutor {
         switch (event.getSubcommandName()) {
             case "json" -> importFromJson(event);
             case "roles" -> importFromRoles(event);
+            default -> throw new IllegalArgumentException("Impossible subcommand!");
         }
     }
 
@@ -95,9 +96,7 @@ public class CommandImport implements CommandExecutor {
         } catch (Exception e) {
             hook.editOriginal("")
                     .setEmbeds(
-                            Embeds.error(
-                                            "Erreur lors de la lecture du fichier : "
-                                                    + e.getMessage())
+                            Embeds.error("Erreur lors de la lecture du fichier : " + e.getMessage())
                                     .build())
                     .queue();
             return;

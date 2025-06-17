@@ -1,5 +1,9 @@
 package fr.itsasync.moderation.util;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NumberUtils {
     static String formatNumber(long number) {
         if (number >= 1_000_000_000) {

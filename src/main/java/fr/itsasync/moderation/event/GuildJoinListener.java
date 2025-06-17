@@ -4,7 +4,9 @@ import fr.itsasync.moderation.data.entity.AsyncMember;
 import fr.itsasync.moderation.service.AsyncGuildRewardService;
 import fr.itsasync.moderation.service.AsyncMemberService;
 import fr.itsasync.moderation.util.annotation.Listener;
+
 import lombok.RequiredArgsConstructor;
+
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;

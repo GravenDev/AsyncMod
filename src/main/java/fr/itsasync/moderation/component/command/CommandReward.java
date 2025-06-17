@@ -5,9 +5,9 @@ import static fr.itsasync.moderation.component.button.DeleteButton.DELETE_BUTTON
 import fr.itsasync.moderation.data.entity.AsyncGuildReward;
 import fr.itsasync.moderation.service.AsyncGuildRewardService;
 import fr.itsasync.moderation.util.AsyncColors;
+import fr.itsasync.moderation.util.Embeds;
 import fr.itsasync.moderation.util.annotation.Command;
 import fr.itsasync.moderation.util.executor.CommandExecutor;
-import fr.itsasync.moderation.util.Embeds;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +67,7 @@ public class CommandReward implements CommandExecutor {
             case "add" -> this.add(event);
             case "remove" -> this.remove(event);
             case "list" -> this.list(event);
+            default -> throw new IllegalArgumentException("Impossible subcommand!");
         }
     }
 

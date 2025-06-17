@@ -1,9 +1,9 @@
 package fr.itsasync.moderation.component.command;
 
 import fr.itsasync.moderation.service.AsyncGuildService;
+import fr.itsasync.moderation.util.Embeds;
 import fr.itsasync.moderation.util.annotation.Command;
 import fr.itsasync.moderation.util.executor.CommandExecutor;
-import fr.itsasync.moderation.util.Embeds;
 
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

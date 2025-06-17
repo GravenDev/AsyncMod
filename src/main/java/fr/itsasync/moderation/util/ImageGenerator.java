@@ -13,6 +13,7 @@ import lombok.SneakyThrows;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.awt.*;
@@ -277,10 +278,8 @@ public class ImageGenerator {
         List<Member> dMembers = members.stream().map(memberMapper).toList();
 
         AsyncMember originalUser = user;
-        if (user != null) {
-            if (members.stream().anyMatch(u -> user.user().id() == u.user().id())) {
-                originalUser = null;
-            }
+        if (user != null && members.stream().anyMatch(u -> user.user().id() == u.user().id())) {
+            originalUser = null;
         }
 
         int imageHeight =
@@ -321,7 +320,8 @@ public class ImageGenerator {
                                         10 + 25 / 2,
                                         PRIMARY_BG);
                             } catch (IOException e) {
-                                throw new RuntimeException(e);
+                                throw new RuntimeException(
+                                        "Unable to draw the leaderboard image", e);
                             }
                         });
 
@@ -408,11 +408,22 @@ public class ImageGenerator {
     }
 
     private void drawMemberPosition(
-            Graphics2D g2d, int y, Color color, Image avatar, int rank, long level, String name) {
+            @NotNull Graphics2D g2d,
+            int y,
+            Color color,
+            Image avatar,
+            int rank,
+            long level,
+            String name) {
         g2d.setColor(PRIMARY_BG);
         g2d.fillRect(10, y, 1125, 125);
 
-        g2d.setColor(color == null ? ORANGE : color == Color.BLACK ? null : color);
+        g2d.setColor(
+                switch (color) {
+                    case null -> ORANGE;
+                    case Color.BLACK -> null;
+                    default -> color;
+                });
         g2d.fillRect(10, y, 125, 125);
 
         g2d.drawImage(avatar, 15, y + 5, 115, 115, null);
@@ -440,9 +451,7 @@ public class ImageGenerator {
                             g2d,
                             NumberUtils.formatNumber(rank),
                             100,
-                            (text) -> {
-                                drawCenteredText(g2d, text, 207.5f, y + 62.5f);
-                            });
+                            text -> drawCenteredText(g2d, text, 207.5f, y + 62.5f));
         }
 
         drawVCenteredText(g2d, name != null ? "@" + name : "-", 317.5f, y + 62.5f);
@@ -454,9 +463,7 @@ public class ImageGenerator {
                     g2d,
                     NumberUtils.formatNumber(level),
                     100,
-                    (text) -> {
-                        drawCenteredText(g2d, text, 1073, y + 62.5f);
-                    });
+                    text -> drawCenteredText(g2d, text, 1073, y + 62.5f));
         }
     }
 

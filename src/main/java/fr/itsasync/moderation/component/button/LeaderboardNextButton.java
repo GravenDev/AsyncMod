@@ -1,8 +1,8 @@
 package fr.itsasync.moderation.component.button;
 
 import fr.itsasync.moderation.service.AsyncGuildService;
-import fr.itsasync.moderation.util.executor.ButtonExecutor;
 import fr.itsasync.moderation.util.annotation.Command;
+import fr.itsasync.moderation.util.executor.ButtonExecutor;
 
 import lombok.RequiredArgsConstructor;
 

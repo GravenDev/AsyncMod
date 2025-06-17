@@ -161,7 +161,7 @@ public class AsyncMemberService {
             gMember.level(gMember.level() + 1);
 
             xpToNextLevel = levelUtils.xpForNextLevelAt(gMember.level());
-        } while(gMember.experience() > xpToNextLevel);
+        } while (gMember.experience() > xpToNextLevel);
 
         rewardService.grantReward(member, gMember.level());
         notificationService.sendNotification(member, gMember.level());
@@ -190,10 +190,8 @@ public class AsyncMemberService {
         if (member == null) {
             try {
                 member =
-                        guild.retrieveMemberById(asyncMember.user().id())
-                                .useCache(true)
-                                .complete();
-            } catch (Exception e) {
+                        guild.retrieveMemberById(asyncMember.user().id()).useCache(true).complete();
+            } catch (Exception _) {
                 return null;
             }
         }

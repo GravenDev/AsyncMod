@@ -31,8 +31,8 @@ public class AsyncMember {
     @Getter
     @Setter
     public static class AsyncMemberId implements Serializable {
-        private AsyncUser user;
+        private transient AsyncUser user;
 
-        private AsyncGuild guild;
+        private transient AsyncGuild guild;
     }
 }

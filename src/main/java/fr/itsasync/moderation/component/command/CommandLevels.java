@@ -3,6 +3,7 @@ package fr.itsasync.moderation.component.command;
 import fr.itsasync.moderation.data.entity.AsyncMember;
 import fr.itsasync.moderation.data.repository.AsyncMemberRepository;
 import fr.itsasync.moderation.service.AsyncMemberService;
+import fr.itsasync.moderation.util.LogUtils;
 import fr.itsasync.moderation.util.annotation.Command;
 import fr.itsasync.moderation.util.executor.CommandExecutor;
 
@@ -47,6 +48,7 @@ public class CommandLevels implements CommandExecutor {
             case "add" -> this.add(event);
             case "remove" -> this.remove(event);
             case "set" -> this.set(event);
+            default -> throw new IllegalArgumentException("Impossible subcommand!");
         }
     }
 
@@ -69,13 +71,7 @@ public class CommandLevels implements CommandExecutor {
                                 + gMember.level()
                                 + "**")
                 .queue();
-        log.info(
-                "{} changed level of {} from {} to {} in guild {}",
-                event.getMember().getUser().getAsTag(),
-                member.getUser().getAsTag(),
-                oldLevel,
-                oldLevel + lvl,
-                event.getGuild().getName());
+        LogUtils.logLevelChange(log, event.getGuild(), member.getUser(), oldLevel, oldLevel + lvl);
     }
 
     private void remove(SlashCommandInteractionEvent event) {
@@ -97,13 +93,7 @@ public class CommandLevels implements CommandExecutor {
                                 + gMember.level()
                                 + "**")
                 .queue();
-        log.info(
-                "{} changed level of {} from {} to {} in guild {}",
-                event.getMember().getUser().getAsTag(),
-                member.getUser().getAsTag(),
-                oldLevel,
-                oldLevel - lvl,
-                event.getGuild().getName());
+        LogUtils.logLevelChange(log, event.getGuild(), member.getUser(), oldLevel, oldLevel - lvl);
     }
 
     private void set(SlashCommandInteractionEvent event) {
@@ -125,12 +115,6 @@ public class CommandLevels implements CommandExecutor {
                                 + gMember.level()
                                 + "**")
                 .queue();
-        log.info(
-                "{} changed level of {} from {} to {} in guild {}",
-                event.getMember().getUser().getAsTag(),
-                member.getUser().getAsTag(),
-                oldLevel,
-                lvl,
-                event.getGuild().getName());
+        LogUtils.logLevelChange(log, event.getGuild(), member.getUser(), oldLevel, lvl);
     }
 }

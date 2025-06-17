@@ -36,14 +36,16 @@ public class VocalExperienceCron {
         for (Guild guild : bot.getGuilds()) {
             for (VoiceChannel channel : guild.getVoiceChannels()) {
 
-                List<Member> members = channel.getMembers().stream()
-                        .filter(user -> user.getVoiceState() != null)
-                        .filter(user -> !user.getVoiceState().isDeafened())
-                        .filter(user -> !user.getVoiceState().isMuted())
-                        .peek(_ -> counter.incrementAndGet())
-                        .toList();
+                List<Member> members =
+                        channel.getMembers().stream()
+                                .filter(user -> user.getVoiceState() != null)
+                                .filter(user -> !user.getVoiceState().isDeafened())
+                                .filter(user -> !user.getVoiceState().isMuted())
+                                .toList();
 
-                if(members.size() < 2) {
+                counter.addAndGet(members.size());
+
+                if (members.size() < 2) {
                     continue;
                 }
 

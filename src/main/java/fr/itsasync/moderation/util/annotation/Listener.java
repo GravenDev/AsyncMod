@@ -7,5 +7,4 @@ import java.lang.annotation.RetentionPolicy;
 
 @Service
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Listener {
-}
+public @interface Listener {}
